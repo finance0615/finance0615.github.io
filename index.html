@@ -1,0 +1,1590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<base target="_top">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Part Timer Attendance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* VOICE friendly, tidy workbook for teachers · IDEA an engineering notebook: blueprint grid band, robot mark
+   COLOUR Engineering For Kids purple, kid green, charcoal · TYPE Nunito · LAYOUT one calm column, stacked on phones */
+:root{color-scheme:light;--bg:#f5f2f9;--panel:#fff;--ink:#2b2730;--mute:#6d6676;--line:#e3dceb;
+  --purple:#5b1889;--purple-2:#3f0f61;--purple-soft:#efe6f6;--green:#84be2b;--green-ink:#4d7a0f;--green-soft:#eef7e0;
+  --warn:#a86400;--bad:#c0322b;--pkab:#5b1889;--bbb:#b35a00}
+*{box-sizing:border-box;min-width:0}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 "Nunito",system-ui,sans-serif;overflow-x:clip}
+button,input,select,textarea{font:inherit;color:inherit}
+h1,h2,h3{margin:0;line-height:1.1}
+.wrap{max-width:1100px;margin:0 auto;padding:0 max(4vw,14px)}
+header{background:#fff;border-bottom:4px solid var(--green);position:relative}
+header::after{content:"";position:absolute;left:0;right:0;bottom:-4px;height:4px;background:linear-gradient(90deg,var(--purple) 0 62%,var(--green) 62%)}
+header .wrap{display:flex;align-items:center;gap:12px;min-height:68px;flex-wrap:wrap;padding-block:8px}
+.brand{display:flex;align-items:center;gap:10px;flex:1}
+.brand img{display:block;height:50px;width:auto}
+.word{font-size:13px;font-weight:800;letter-spacing:.01em;line-height:1}
+.word .e{color:var(--purple)}.word .f{color:#313131}.word .k{color:var(--green)}
+header h1{font-size:19px;font-weight:800;color:var(--ink);margin-top:3px}
+header .who{font-size:14px;color:var(--mute)}
+.hbtn{background:#fff;border:1.5px solid var(--line);border-radius:10px;padding:6px 12px;min-height:40px;cursor:pointer;font-size:14px;font-weight:700;color:var(--purple)}
+.hbtn:hover{border-color:var(--purple)}
+/* blueprint band */
+.band{background-color:var(--purple);
+  background-image:repeating-linear-gradient(0deg,rgb(255 255 255/.08) 0 1px,transparent 1px 24px),repeating-linear-gradient(90deg,rgb(255 255 255/.08) 0 1px,transparent 1px 24px);
+  padding:18px 0 46px;margin-bottom:-30px}
+.bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.period{display:flex;align-items:center;gap:4px;background:#fff;border-radius:14px;padding:4px;box-shadow:0 4px 14px rgb(30 0 60/.25)}
+.period b{font-size:18px;padding:0 6px;white-space:nowrap}
+.period small{display:block;font-size:13px;color:var(--mute);font-weight:600}
+.period .mid{text-align:center;min-width:170px}
+.icon{width:44px;height:44px;border:0;background:transparent;border-radius:10px;cursor:pointer;font-size:22px;color:var(--purple);font-weight:800}
+.icon:hover{background:var(--purple-soft)}
+.tabs{display:flex;gap:4px;background:rgb(255 255 255/.14);border-radius:14px;padding:4px;margin-left:auto}
+.tabs button{border:0;background:transparent;border-radius:10px;padding:0 14px;min-height:44px;cursor:pointer;font-weight:800;color:#fff;opacity:.85}
+.tabs button[aria-selected=true]{background:#fff;color:var(--purple);opacity:1}
+.btn{border:1.5px solid var(--line);background:#fff;border-radius:12px;padding:0 16px;min-height:44px;cursor:pointer;font-weight:800;display:inline-flex;align-items:center;gap:6px;justify-content:center;color:var(--ink)}
+.btn:hover{border-color:var(--purple)}
+.btn.primary{background:var(--purple);border-color:var(--purple);color:#fff}
+.btn.primary:hover{background:var(--purple-2)}
+.btn.ok{background:var(--green);border-color:var(--green);color:#1d3200}
+.btn.ghost{background:transparent}
+.btn.sm{min-height:38px;padding:0 12px;font-size:14px}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+:focus-visible{outline:3px solid var(--green);outline-offset:2px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:0 1px 2px rgb(40 0 70/.04)}
+main section{position:relative}
+.sum{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--line);border-radius:16px;overflow:hidden;border:1px solid var(--line);margin-bottom:14px;box-shadow:0 6px 20px rgb(40 0 70/.08)}
+.sum.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+.sum div{background:#fff;padding:14px 16px}
+.sum span{display:block;font-size:13px;color:var(--mute);font-weight:600}
+.sum b{font-size:clamp(19px,3.2vw,27px);white-space:nowrap;font-variant-numeric:tabular-nums;font-weight:800}
+.sum .big{background:var(--green-soft)}
+.sum .big b{color:var(--green-ink)}
+.banner{padding:12px 16px;border-radius:12px;margin-bottom:12px;background:#fff4dc;border:1px solid #e9c46a;font-size:15px}
+.day{margin:20px 0 6px;font-size:14px;font-weight:800;color:var(--purple);display:flex;align-items:center;gap:8px}
+.day::before{content:"";width:8px;height:8px;border-radius:2px;background:var(--green);transform:rotate(45deg)}
+.entry{display:grid;grid-template-columns:76px minmax(0,1fr) auto;gap:4px 14px;padding:14px 16px;border-bottom:1px solid var(--line);align-items:start}
+.entry:last-child{border-bottom:0}
+.entry .t{font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--purple)}
+.entry .t small{display:block;font-weight:600;color:var(--mute);font-size:13px}
+.entry .s{font-weight:800}
+.entry .meta{font-size:14px;color:var(--mute)}
+.entry .amt{text-align:right;font-weight:800;white-space:nowrap;font-variant-numeric:tabular-nums}
+.entry .amt small{display:block;font-weight:600;font-size:13px;color:var(--bad)}
+.entry .acts{grid-column:2/4;display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+.chip{display:inline-block;font-size:12px;font-weight:800;padding:1px 9px;border-radius:999px;white-space:nowrap;vertical-align:1px}
+.chip.PKAB{color:var(--pkab);background:var(--purple-soft)}.chip.BBB{color:var(--bbb);background:#fbeedd}
+.chip.Pending{color:var(--warn);background:#fff1d6}.chip.Verified{color:var(--green-ink);background:var(--green-soft)}.chip.Rejected{color:var(--bad);background:#fde8e6}
+.rnote{grid-column:2/4;font-size:14px;color:var(--bad)}
+.empty{padding:40px 20px;text-align:center;color:var(--mute)}
+.fab{position:sticky;bottom:14px;display:flex;justify-content:flex-end;pointer-events:none;margin-top:16px}
+.fab .btn{pointer-events:auto;box-shadow:0 8px 24px rgb(60 0 100/.3);min-height:54px;padding:0 24px;font-size:17px}
+label{display:block;font-size:14px;font-weight:700;margin-bottom:4px}
+input,select,textarea{width:100%;min-height:46px;border:1.5px solid var(--line);border-radius:12px;background:#fff;padding:8px 12px;font-size:16px}
+input:focus,select:focus{border-color:var(--purple);outline:0}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.field{margin-bottom:14px}
+.hint{font-size:13px;color:var(--mute);margin-top:4px}
+dialog{border:0;border-radius:20px;padding:0;width:min(560px,100vw - 20px);background:#fff;color:var(--ink);max-height:92vh;box-shadow:0 20px 60px rgb(30 0 60/.35)}
+dialog::backdrop{background:rgb(40 10 60/.5)}
+.dlg-h{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--line);position:sticky;top:0;background:#fff;z-index:1}
+.dlg-h h2{font-size:20px;color:var(--purple)}
+.dlg-b{padding:18px 20px}
+.dlg-f{display:flex;gap:10px;justify-content:flex-end;padding:14px 20px;border-top:1px solid var(--line);position:sticky;bottom:0;background:#fff}
+.preview{background:var(--purple-soft);border-radius:12px;padding:12px 14px;font-size:15px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.preview b{font-variant-numeric:tabular-nums;color:var(--purple)}
+/* login */
+#loginWrap{background-image:repeating-linear-gradient(0deg,rgb(91 24 137/.06) 0 1px,transparent 1px 24px),repeating-linear-gradient(90deg,rgb(91 24 137/.06) 0 1px,transparent 1px 24px);min-height:calc(100vh - 72px);padding:6vh 14px}
+.login{max-width:420px;margin:0 auto;padding:28px;text-align:left;box-shadow:0 14px 40px rgb(40 0 70/.12)}
+.login .logo{display:block;margin:0 auto 8px;width:170px;height:auto}
+.login h2{font-size:28px;margin-bottom:4px;color:var(--purple)}
+.login p{color:var(--mute);margin:0 0 20px}
+.info{background:var(--purple-soft);color:var(--purple);border-radius:10px;padding:10px 12px;font-size:14px;font-weight:700;margin:4px 0 8px}
+.err{color:var(--bad);font-size:14px;min-height:20px;margin:6px 0}
+.tools{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.tools input{max-width:300px}.tools select{max-width:200px}
+.person{margin-bottom:14px;overflow:hidden}
+.person-h{display:flex;align-items:center;gap:10px;padding:12px 16px;background:var(--purple-soft);flex-wrap:wrap;border-bottom:1px solid var(--line)}
+.person-h h3{font-size:17px;flex:1;color:var(--purple)}
+.person-h .meta{font-size:13px;color:var(--mute)}
+.rv{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1.4fr) auto;gap:8px 14px;padding:12px 16px;border-bottom:1px solid var(--line);align-items:center}
+.rv:last-child{border-bottom:0}
+.rv .inputs{display:grid;grid-template-columns:.7fr 1fr 1fr 1.2fr;gap:6px}
+.rv .inputs input{min-height:40px;padding:6px 8px;font-size:15px}
+.rv .inputs label{font-size:12px;font-weight:700;color:var(--mute);margin:0}
+.rv .btns{display:flex;gap:6px;flex-wrap:wrap}
+.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th,td{padding:10px 12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{font-size:13px;color:var(--purple);font-weight:800;background:var(--purple-soft);position:sticky;top:0}
+tfoot td{font-weight:800;border-top:2px solid var(--purple)}
+td.bank{font-size:13px;color:var(--mute);min-width:220px}
+.warnc{color:var(--warn);font-weight:700}
+/* schools */
+.addsch{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr) minmax(0,1fr) auto;gap:10px;align-items:end;padding:14px 16px;margin-bottom:12px}
+.sch{display:grid;grid-template-columns:minmax(0,1fr) auto 120px auto auto;gap:10px;align-items:center;padding:10px 16px;border-bottom:1px solid var(--line)}
+.sch:last-child{border-bottom:0}
+.sch input[data-k=name]{border-color:transparent;font-weight:700;padding-left:4px}
+.sch input[data-k=name]:hover{border-color:var(--line)}
+.seg{display:inline-flex;border:1.5px solid var(--line);border-radius:12px;padding:3px;gap:3px}
+.seg button{border:0;background:transparent;border-radius:9px;min-height:36px;padding:0 12px;font-weight:800;cursor:pointer;color:var(--mute)}
+.seg button[data-payer=PKAB][aria-pressed=true]{background:var(--purple);color:#fff}
+.seg button[data-payer=BBB][aria-pressed=true]{background:var(--bbb);color:#fff}
+.act{display:flex;align-items:center;gap:6px;margin:0;font-size:14px;white-space:nowrap}
+.act input{width:20px;min-height:20px;accent-color:var(--green)}
+.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--purple-2);color:#fff;padding:12px 18px;border-radius:12px;font-size:15px;z-index:99;max-width:92vw;opacity:0;transition:opacity .2s;pointer-events:none;font-weight:700}
+.toast.show{opacity:1}
+.sm-only{display:none}
+/* groups */
+.navs{margin-left:auto;display:flex;flex-direction:column;gap:6px;align-items:flex-end;max-width:100%}
+.groups{display:flex;gap:4px;background:rgb(0 0 0/.18);border-radius:14px;padding:4px}
+.groups button{border:0;background:transparent;color:#fff;font-weight:800;border-radius:10px;padding:0 16px;min-height:40px;cursor:pointer;opacity:.85}
+.groups button[aria-pressed=true]{background:var(--green);color:#1d3200;opacity:1}
+.verwarn{margin-top:46px;margin-bottom:-30px;font-weight:700}
+/* semester planner */
+.planhead{padding:16px 18px;margin-bottom:12px}.planhead h2{color:var(--purple);font-size:22px;margin-bottom:4px}
+.planf{display:grid;grid-template-columns:1fr 1fr auto;gap:12px;align-items:end}
+.prow{display:grid;grid-template-columns:30px minmax(0,2fr) 120px 92px 92px 70px 80px;gap:8px;align-items:end;padding:10px 0;border-bottom:1px solid var(--line)}
+.prow.off{opacity:.55}.prow.off .pmain input{text-decoration:line-through}
+.prow input,.prow select{min-height:40px;padding:6px 8px;font-size:15px}
+.pf label{font-size:12px;color:var(--mute);margin:0}
+.pkeep{margin:0 0 10px;display:flex}.pkeep input{width:22px;min-height:22px;accent-color:var(--green)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.pmain .meta{margin-top:4px}.pmain .btn{margin-left:6px}
+.pbtns{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.planfoot{position:sticky;bottom:10px;display:flex;justify-content:flex-end;gap:10px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px;margin-top:14px;box-shadow:0 8px 24px rgb(60 0 100/.18)}
+@media(max-width:760px){
+  .navs{width:100%;align-items:stretch}.groups{width:100%}.groups button{flex:1;padding:0 6px;font-size:14px}
+  .planf{grid-template-columns:1fr}
+  .prow{grid-template-columns:30px minmax(0,1fr) minmax(0,1fr)}.prow .pmain{grid-column:2/-1;grid-row:1}.prow .pkeep{grid-column:1;grid-row:1;align-self:start;margin:8px 0 0}
+  .prow>:nth-child(3){grid-column:2/-1}.prow>:nth-child(4),.prow>:nth-child(6){grid-column:2}.prow>:nth-child(5),.prow>:nth-child(7){grid-column:3}
+}
+/* week grid (HOT overview, like the old weekly schedule sheet) */
+.seg button[data-view][aria-pressed=true]{background:var(--purple);color:#fff}
+.wgrid{display:grid;grid-template-columns:repeat(var(--n),minmax(190px,1fr));gap:8px;overflow-x:auto;padding-bottom:6px;align-items:start}
+.wcol{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;min-width:0}
+.wcol.today{border-color:var(--green);box-shadow:0 0 0 2px var(--green-soft)}
+.whead{background:var(--purple);color:#fff;padding:8px 10px;display:flex;justify-content:space-between;align-items:baseline;gap:6px;position:sticky;top:0}
+.whead span{font-size:13px;opacity:.85}
+.woff{font-size:12px;font-weight:700;color:var(--bad);padding:6px 10px;border-bottom:1px solid var(--line);background:#fdf3f2}
+.wblk{padding:8px 8px 4px;border-bottom:1px solid var(--line)}
+.wblk:last-child{border-bottom:0}
+.wsch{font-weight:800;font-size:13px;color:var(--purple);padding:0 2px 4px;line-height:1.25}
+.wsch small{color:var(--mute);font-weight:700}
+.wcls{display:block;width:100%;text-align:left;background:#faf8fc;border:1px solid transparent;border-radius:10px;padding:6px 8px;margin-bottom:4px;cursor:pointer;font-size:13px;line-height:1.35}
+.wcls:hover{border-color:var(--purple)}
+.wcls span{display:block}.wcls .c{font-weight:700}.wcls .t{color:var(--ink)}.wcls .p{color:var(--green-ink);font-weight:700}
+.wcls .tt{font-weight:800;color:var(--purple);font-size:12px}
+.wcls.last{background:#fff5e6}.wcls.need{background:#fde8e6}.wcls.need .tt{color:var(--bad)}
+/* classes tab */
+details.school>summary{gap:10px;flex-wrap:wrap}
+.crow{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--line);align-items:flex-start}
+.crow:last-of-type{border-bottom:0}.crow.gone{opacity:.6}
+.cbtns{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.ab>.btn{margin-top:8px}
+.calbox{display:flex;align-items:flex-start;gap:10px;font-weight:700;margin:4px 0 12px;cursor:pointer}
+.calbox span{font-weight:500;color:var(--mute)}.calbox input{width:22px;min-height:22px;accent-color:var(--purple);flex:none;margin-top:1px}
+.datesbox{background:var(--purple-soft);border-radius:12px;padding:12px;margin-bottom:14px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.dchip{border:1.5px solid var(--purple);background:#fff;color:var(--purple);border-radius:999px;padding:4px 10px;font-weight:700;font-size:13px;cursor:pointer;min-height:32px}
+.dchip span{opacity:.6;margin-left:2px}
+.addrow{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:6px;font-size:14px}
+.addrow input,.addrow select{width:auto;min-height:40px;padding:6px 8px;font-size:15px}.addrow input[type=number]{width:70px}
+.dhead{display:flex;justify-content:space-between}
+/* schedule */
+.sess{display:grid;grid-template-columns:70px minmax(0,1fr) auto;gap:6px 14px;padding:14px 16px;margin-bottom:10px;align-items:start}
+.sess .when b,.srow .when b{display:block;font-size:18px;color:var(--purple);font-variant-numeric:tabular-nums}
+.sess .when small,.srow .when small{color:var(--mute);font-size:13px}
+.sess .ssch{font-weight:800;font-size:17px}.sess .cls{font-weight:600}
+.meta{font-size:14px;color:var(--mute)}
+.proj{margin-top:4px;font-size:15px;background:var(--green-soft);border-radius:8px;padding:4px 10px;display:inline-block}
+.proj.none{background:#f3f0f6;color:var(--mute);font-style:italic}
+.team{font-size:14px;margin-top:6px}
+.sess.gone,.srow.gone{opacity:.75}.sess.gone .ssch,.sess.gone .cls{text-decoration:line-through}
+.offnote{color:var(--bad);font-weight:700;font-size:14px;margin-top:4px}
+.free{color:var(--mute);font-size:14px;margin:0 0 6px 18px}
+.dcount{font-weight:600;color:var(--mute);font-size:13px;margin-left:auto}
+.day{justify-content:flex-start}
+.chip.last{color:#7a3b00;background:#ffe9c7}
+.srow{display:grid;grid-template-columns:62px minmax(0,1fr) minmax(0,auto);gap:6px 12px;padding:10px 16px;border-bottom:1px solid var(--line);align-items:start}
+.srow:last-child{border-bottom:0}.srow .when b{font-size:16px}
+.srow .proj{font-size:13px;padding:2px 8px}
+.cid{font-size:11px;color:var(--mute);font-weight:600;background:#f3f0f6;border-radius:6px;padding:0 5px;white-space:nowrap}
+.team-c{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end;align-items:center;max-width:300px}
+.tchip{border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:2px 9px;font-weight:800;font-size:13px;cursor:pointer;min-height:30px}
+.tchip.lead{border-color:var(--purple);color:var(--purple)}.tchip.ft{background:var(--purple-soft)}
+.tchip.sub{border-style:dashed}.tchip.off{border-color:var(--bad);color:var(--bad);text-decoration:line-through}
+.sum.five{grid-template-columns:repeat(5,minmax(0,1fr))}
+.alerts{display:grid;gap:8px;margin-bottom:14px}
+details.alert{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+details.alert>summary{cursor:pointer;padding:12px 16px;font-weight:800;list-style:none;display:flex;align-items:center;gap:8px}
+details.alert>summary::-webkit-details-marker{display:none}
+details.alert>summary::before{content:"▸";color:var(--purple);transition:transform .15s}
+details.alert[open]>summary::before{transform:rotate(90deg)}
+details.alert.warn>summary{background:#fff4dc}
+.cnt{margin-left:auto;background:var(--purple-soft);color:var(--purple);border-radius:999px;padding:0 10px;font-size:14px}
+details.alert.warn .cnt{background:#ffe2a8;color:#7a4b00}
+.ab{padding:4px 16px 14px}.ab ul{margin:6px 0;padding-left:20px}.ab li{margin:3px 0}
+.trow2{display:flex;gap:12px;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.trow2:last-child{border-bottom:0}
+.ticks{display:flex;gap:8px;flex-wrap:wrap}
+.tick{display:inline-flex;align-items:center;gap:6px;border:1.5px solid var(--line);border-radius:10px;padding:6px 10px;margin:0;font-size:14px;cursor:pointer;background:#fff}
+.tick input{width:20px;min-height:20px;accent-color:var(--green)}.tick.done{background:var(--green-soft);border-color:var(--green)}
+.tick small{color:var(--green-ink)}
+.todo{padding:12px 16px;margin-bottom:14px;border-color:#e9c46a;background:#fffaf0}.todo h3{font-size:16px;color:var(--purple)}
+.sheetlink{margin:-4px 0 14px}.sheetlink a{color:var(--purple);font-weight:800}
+.scope{border:0;padding:0;margin:0 0 14px}.scope legend{font-weight:700;font-size:14px;margin-bottom:4px}
+.scope label{display:flex;gap:8px;align-items:center;font-weight:600;margin:6px 0}.scope input{width:20px;min-height:20px;accent-color:var(--purple)}
+.chbtns{display:grid;gap:8px}
+.calform{display:grid;grid-template-columns:1.2fr 1fr 1fr 1.4fr;gap:10px;align-items:end;padding:14px 16px;margin-bottom:8px}
+.calform .f1{grid-column:1/-2}
+details.cmp{border-bottom:1px solid var(--line)}details.cmp:last-child{border-bottom:0}
+details.cmp>summary{display:grid;grid-template-columns:minmax(0,1.6fr) repeat(4,minmax(0,1fr));gap:8px;padding:12px 16px;cursor:pointer;list-style:none;align-items:center;font-variant-numeric:tabular-nums}
+details.cmp>summary::-webkit-details-marker{display:none}
+details.cmp>summary small{display:block;font-size:12px;color:var(--mute);font-weight:600}
+details.cmp[open]>summary{background:var(--purple-soft)}
+.tabs button{flex:none;white-space:nowrap}
+.tabs{overflow-x:auto;max-width:100%;scrollbar-width:none}.tabs::-webkit-scrollbar{display:none}
+@media(max-width:760px){
+  .sum.five{grid-template-columns:repeat(2,minmax(0,1fr))}.sum.five>div:first-child{grid-column:1/-1}
+  .sess{grid-template-columns:58px minmax(0,1fr)}.sess .act{grid-column:1/-1}.sess .act .btn{width:100%}
+  .srow{grid-template-columns:52px minmax(0,1fr)}.team-c{grid-column:1/-1;justify-content:flex-start;max-width:none}
+  .calform{grid-template-columns:repeat(2,minmax(0,1fr))}.calform .f1,.calform>div:first-child{grid-column:1/-1}.calform .btn{grid-column:1/-1}
+  details.cmp>summary{grid-template-columns:repeat(4,minmax(0,1fr))}details.cmp>summary .nm{grid-column:1/-1}
+  .tabs:not(.many) button{flex:1}
+}
+/* fees */
+.sec{font-size:22px;color:var(--purple);margin:26px 0 2px}.sec:first-child{margin-top:4px}
+.sub{color:var(--mute);margin:0 0 12px;font-size:15px}
+.ftypes{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,320px),1fr));gap:12px}
+.ftype{padding:14px 16px;display:flex;flex-direction:column;gap:12px}
+.ft-h{display:flex;flex-direction:column;align-items:stretch;gap:4px}#fees,#classes{padding-top:38px}.ft-h input{font-weight:800;font-size:18px;color:var(--purple)}.ft-h .meta{white-space:nowrap;font-size:13px;color:var(--mute)}
+.ft-g{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px}
+.ft-g label{font-size:13px}.ft-g .per{font-weight:600;color:var(--mute)}
+.ft-f{display:flex;gap:8px;justify-content:flex-end;margin-top:auto}
+.ftype[data-old=""]{border-style:dashed;background:transparent}
+.trow{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 16px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.trow:last-child{border-bottom:0}.tlist{max-height:440px;overflow-y:auto}.trow select{max-width:220px}.trow .meta{color:var(--mute);font-size:13px}
+.trow .num{display:flex;align-items:center;gap:8px}
+.evform{display:grid;grid-template-columns:1.4fr 1.4fr 1fr 1fr .8fr auto;gap:10px;align-items:end;padding:14px 16px;margin-bottom:12px}
+.entry.gone{background:#faf8fb}.entry.gone .s,.entry.gone .t{text-decoration:line-through;color:var(--mute)}
+.chip.Deleted{color:#6d6676;background:#ece9ef}
+@media(max-width:760px){.evform{grid-template-columns:repeat(2,minmax(0,1fr))}.evform .btn{grid-column:1/-1}.trow select{max-width:none}}
+@media(max-width:760px){.sm-only{display:inline}.lg{display:none}}
+.loading{opacity:.55;pointer-events:none}
+@media (prefers-reduced-motion:reduce){.toast{transition:none}}
+@media(max-width:760px){
+  .tabs{margin-left:0;width:100%}.tabs button{padding:0 12px;font-size:15px}
+  .period{width:100%;justify-content:space-between}
+  .sum{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .sum.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .rv{grid-template-columns:minmax(0,1fr)}
+  .rv .inputs{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .rv .btns .btn{flex:1}
+  .entry{grid-template-columns:64px minmax(0,1fr) auto;padding:12px}.entry .acts,.rnote{grid-column:1/-1}
+  header .who,.word{display:none}
+  header h1{font-size:17px}
+  .addsch{grid-template-columns:repeat(2,minmax(0,1fr))}.addsch .f1{grid-column:1/-1}
+  .sch{grid-template-columns:minmax(0,1fr) auto;padding:12px}
+  .sch input[data-k=name]{grid-column:1/-1}
+}
+@media(max-width:600px){table{font-size:13px}.stack thead{display:none}.stack tr{display:grid;padding-block:10px;border-bottom:1px solid var(--line)}.stack td{display:flow-root;border:0;padding:3px 12px;padding-inline-start:9em;text-align:start}.stack td::before{content:attr(data-l);float:inline-start;width:8.5em;margin-inline-start:-9em;color:var(--mute)}.stack td:empty{display:none}.stack td.nm{padding-inline-start:12px;font-size:15px}.stack td.bank{min-width:0}.stack tfoot td.lbl{display:none}}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <div class="brand"><img src="data:image/jpeg;base64,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" alt="" width="46" height="50">
+    <div><div class="word"><span class="e">Engineering</span> <span class="f">For</span> <span class="k">Kids</span></div><h1>Part Timer Attendance</h1></div></div>
+  <span class="who" id="who"></span>
+  <button class="hbtn" id="pinBtn" hidden>Change PIN</button>
+  <button class="hbtn" id="outBtn" hidden>Log out</button>
+</div></header>
+
+<div id="loginWrap"><div class="panel login" id="loginView">
+    <img class="logo" src="data:image/jpeg;base64,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JGub0OQexChPX3Xf6ynHTnpv0hXqf4m640Pxx/cuZS3Ba9Udneq0V0ldb71DC+SljiML3AZEZzkE+4/5FnNJbp6draCloblKLdUtYGDxP7G/Ax0d5fAqRJWxTtMEjWvaRhzXAHp7wo015txp46errzboW0FTBG6UiM4jkx3Bb5E+5VcvBysO+ziGFJNNfFF/T0ZrZXOuTsg/ck2nfFNGJontexwDmvacghfsol2RuNbUWu40E8sklPA5jog855OYHLR94FSyF3+F50c7GhkRWtk9VniQU15nKIi6BIEREAREQBERAEREAREQBERAEREAREQBERAEREAREQFb+JvYPV+819sVXpm4WikZb6WaGT06R7S5z3NIxytPTop807QTWrSVrtdQ5rpaSjhge5nzS5jA0492QsoiAKIN8dhNPbyWWB81QbXfaNpbSXFjObLT3jkb/KYfvjyUvogKeUu23Gbp6gZpuza/ts9qhaYYqiSojLms7DDnxGQe7vhbpsxwvRaH1YNea9vX7Y9Vc7po3YLoqeQjrJl3rSSdT6xxjyCseiAhPiS2j1HvBoC12TTVXb6aekrvSZH1znMaW+G5uBytPXJCkXbvT9ZpPanT2mLjJFJV22gipZXwkljnNbgkEgdOnsWzogC4PZcogIst23t6o93ZNTyVFIaQ1Mk3IxxL8OBx0xjzUoN+YMr6wcrkKjhcPqw1KNS+Ztv3ZpCtQ+U1DXOiKPVtqwAyKuiGYJz5H2Ox3CxumNP6wt2kqzT93qaOogdTujppGvcXR5GOU5HUdfoUgnqFxhR2cLpd7yEtSa09dN+5jwo8zkaFtro656Soa+G5TU8hqHtc0wEkDAx1yutrfa+k1HVyXO3Tiir3Y58jMcpHmR3B94Uitbj2LkjKjfBsWWKsSUdwXb1MOmDjya6EJ02kN2LbG2io701tO3oP3zkAe7Lchdr6ld+bq+13d10iq/AfDJUTVEjjJI9rsux0PTHQD3KYeVOVVI/w3jJak5S09rbfTRqsaC82aDq/R+obpqGK96evrqGpjhERi5nBr8OJySOnn5jyWrXHSO699p/ky73emfRuI5yXgNPxDWgn4KaMdEwpsngVGRJtykk+6UnozKiMnttmt6L0nS6SsBoIXmWV555pnDBe7t9A9y2VcAYXK6uPjwx61VWtRXYkjFRWkERFMbBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQH//2Q==" alt="Engineering For Kids" width="180" height="180">
+    <h2>Sign in</h2>
+    <p>Pick your name and enter your PIN.</p>
+    <form id="loginForm">
+      <div class="field"><label for="lgName">Name</label><select id="lgName" required><option value="">Loading names…</option></select></div>
+      <div class="field"><label for="lgPin">PIN</label><input id="lgPin" type="password" inputmode="numeric" autocomplete="current-password" required></div>
+      <div class="info" id="lgInfo" role="status" hidden></div>
+      <div class="err" id="lgErr"></div>
+      <button class="btn primary" style="width:100%" id="lgBtn">Sign in</button>
+    </form>
+  </div></div>
+  <div id="mainView" hidden>
+    <div class="band"><div class="wrap bar">
+      <div class="period">
+        <button class="icon" id="prevP" aria-label="Previous period">‹</button>
+        <div class="mid"><b id="pLabel"></b><small id="pRange"></small></div>
+        <button class="icon" id="nextP" aria-label="Next period">›</button>
+      </div>
+      <div class="navs">
+        <div class="groups" id="groups" hidden>
+          <button type="button" data-group="sched" aria-pressed="true">Schedule &amp; classes</button>
+          <button type="button" data-group="att" aria-pressed="false">Attendance &amp; pay</button>
+        </div>
+        <div class="tabs" id="tabs" role="tablist">
+          <button role="tab" data-tab="schedule" data-g="sched" aria-selected="true">Schedule</button>
+          <button role="tab" data-tab="classes" data-g="sched" aria-selected="false" data-head>Classes</button>
+          <button role="tab" data-tab="mine" data-g="att" aria-selected="false"><span class="lg">My entries</span><span class="sm-only">Mine</span></button>
+          <button role="tab" data-tab="review" data-g="att" aria-selected="false" data-head>Verify</button>
+          <button role="tab" data-tab="recap" data-g="att" aria-selected="false" data-head>Recap</button>
+          <button role="tab" data-tab="compare" data-g="att" aria-selected="false" data-head>Compare</button>
+          <button role="tab" data-tab="schools" data-g="att" aria-selected="false" data-head>Schools</button>
+          <button role="tab" data-tab="fees" data-g="att" aria-selected="false" data-head>Fees</button>
+        </div>
+      </div>
+    </div></div>
+    <div class="wrap"><div class="banner verwarn" id="verBanner" hidden></div></div>
+    <main class="wrap" id="app">
+    <section id="schedule"></section>
+    <section id="mine" hidden></section>
+    <section id="review" hidden></section>
+    <section id="compare" hidden></section>
+    <section id="classes" hidden></section>
+    <section id="recap" hidden></section>
+    <section id="schools" hidden></section>
+    <section id="fees" hidden></section>
+    </main>
+  </div>
+
+<dialog id="entryDlg">
+  <form id="entryForm" method="dialog">
+    <div class="dlg-h"><h2 id="entryTitle">Add attendance</h2><button type="button" class="icon" data-close aria-label="Close">✕</button></div>
+    <div class="dlg-b">
+      <div class="field" id="staffField" hidden><label for="fStaff">Staff</label><select id="fStaff"></select></div>
+      <div class="field"><label for="fDate">Date</label><input id="fDate" type="date" required></div>
+      <div class="field"><label for="fSchool">School / event</label><select id="fSchool" required></select></div>
+      <div class="grid2 field">
+        <div><label for="fStart">Start</label><select id="fStart" required></select></div>
+        <div><label for="fEnd">End</label><select id="fEnd" required></select></div>
+      </div>
+      <div class="grid2 field">
+        <div><label for="fHours">Hours counted</label><input id="fHours" type="number" step="0.25" min="0.25" max="12" inputmode="decimal" required></div>
+        <div><label for="fRole">Role</label><select id="fRole" required></select></div>
+      </div>
+      <div class="field" id="lateField"><label for="fLate">Minutes late (head teacher)</label><input id="fLate" type="number" min="0" step="1" inputmode="numeric" value="0"><div class="hint">Late arrivals are recorded by the head teacher.</div></div>
+      <div class="field"><label for="fNote">Note (optional)</label><input id="fNote" maxlength="300" placeholder="e.g. 3 anak, replacing Ms. Rina"></div>
+      <div class="preview" id="pvBox"><span id="pvBasis">Estimated pay</span><b id="pvAmt">Rp 0</b></div>
+      <div class="err" id="entryErr"></div>
+    </div>
+    <div class="dlg-f"><button type="button" class="btn ghost" data-close>Cancel</button><button class="btn primary" id="entrySave">Save</button></div>
+  </form>
+</dialog>
+
+<dialog id="pinDlg">
+  <form id="pinForm" method="dialog">
+    <div class="dlg-h"><h2>Change PIN</h2><button type="button" class="icon" data-close aria-label="Close">✕</button></div>
+    <div class="dlg-b">
+      <div class="field"><label for="pOld">Current PIN</label><input id="pOld" type="password" inputmode="numeric" required></div>
+      <div class="field"><label for="pNew">New PIN (4–8 digits)</label><input id="pNew" type="password" inputmode="numeric" pattern="\d{4,8}" required></div>
+      <div class="err" id="pinErr"></div>
+    </div>
+    <div class="dlg-f"><button type="button" class="btn ghost" data-close>Cancel</button><button class="btn primary">Save PIN</button></div>
+  </form>
+</dialog>
+
+<dialog id="asgDlg">
+  <form id="asgForm" method="dialog">
+    <div class="dlg-h"><h2>Assign a teacher</h2><button type="button" class="icon" data-close aria-label="Close">✕</button></div>
+    <div class="dlg-b"><p id="asgWhat" class="sub" style="margin-top:0"></p>
+      <div class="field"><label for="aStaff">Teacher</label><select id="aStaff" required></select></div>
+      <div class="field"><label for="aRole">Role</label><select id="aRole"><option>Assist</option><option>Lead</option></select></div>
+      <fieldset class="field scope"><legend>How long?</legend>
+        <label><input type="radio" name="aScope" value="date" checked> <span id="aDateLbl">Only on this date (substitute)</span></label>
+        <label><input type="radio" name="aScope" value="semester"> Every session this semester</label></fieldset>
+      <div class="field" id="aReplF"><label for="aRepl">Replacing</label><select id="aRepl"></select><div class="hint">The teacher who is away that day (they will not be expected).</div></div>
+      <div class="err" id="asgErr"></div></div>
+    <div class="dlg-f"><button type="button" class="btn ghost" data-close>Cancel</button><button class="btn primary">Save</button></div>
+  </form>
+</dialog>
+
+<dialog id="clsInfo">
+  <div class="dlg-h"><h2 id="ciTitle"></h2><button type="button" class="icon" data-close aria-label="Close">✕</button></div>
+  <div class="dlg-b" id="ciBody"></div>
+</dialog>
+
+<dialog id="clsDlg">
+  <form id="clsForm" method="dialog">
+    <div class="dlg-h"><h2 id="ceTitle">Class</h2><button type="button" class="icon" data-close aria-label="Close">✕</button></div>
+    <div class="dlg-b">
+      <div class="field"><label for="ceSchool">School</label><select id="ceSchool" required></select></div>
+      <div class="field"><label for="ceName">Class / grade</label><input id="ceName" required maxlength="120" placeholder="e.g. G1 - G2 Engineering, Room 2B"></div>
+      <div class="grid2 field"><div><label for="ceStart">Start</label><select id="ceStart" required></select></div><div><label for="ceEnd">End</label><select id="ceEnd" required></select></div></div>
+      <div class="grid2 field"><div><label for="ceStudents">Students</label><input id="ceStudents" type="number" min="0" inputmode="numeric"></div>
+        <div><label for="cePeriod">Period</label><select id="cePeriod"><option value="">–</option><option>Monthly</option><option>Termly</option><option>Semesterly</option><option>Yearly</option></select></div></div>
+      <label class="calbox"><input type="checkbox" id="ceCal"> The school gave us an academic calendar <span>– I will enter every session date</span></label>
+      <div id="ceDatesF" class="datesbox">
+        <div class="dhead"><b id="ceCount">0 sessions</b></div>
+        <div class="chips" id="ceChips"></div>
+        <div class="addrow"><input type="date" id="ceDate" aria-label="Session date"><button type="button" class="btn sm" id="ceAdd">Add date</button></div>
+        <div class="addrow"><span>Add weekly from</span><input type="date" id="ceWFrom" aria-label="First date"><span>×</span><input type="number" id="ceWN" min="1" max="40" value="10" aria-label="Number of weeks"><button type="button" class="btn sm" id="ceWAdd">Add</button></div>
+        <div class="addrow" id="ceCopyRow"><span>Copy dates from</span><select id="ceCopy"></select><button type="button" class="btn sm" id="ceCopyBtn">Copy</button></div>
+        <div class="hint">Tap a date to remove it (e.g. an exam week). Session numbers follow these dates.</div>
+      </div>
+      <div id="ceExpF" class="datesbox">
+        <div class="grid2 field"><div><label for="ceFirst">First session</label><input type="date" id="ceFirst"></div>
+          <div><label for="ceFreq">Repeats</label><select id="ceFreq"><option>Weekly</option><option>Every 2 weeks</option><option>Monthly</option></select></div></div>
+        <div class="field"><label for="ceExp">Expected sessions this period</label><input id="ceExp" type="number" min="1" max="200" inputmode="numeric"></div>
+        <div class="hint" id="ceExpHint">You will be reminded when the last 3 sessions start.</div>
+      </div>
+      <div class="grid2 field"><div><label for="ceSem">Semester</label><input id="ceSem" placeholder="2026-2027 Sem 2"></div><div><label for="ceAy">Academic year</label><input id="ceAy" placeholder="2026-2027"></div></div>
+      <div class="field"><label for="ceNotes">Notes</label><input id="ceNotes" maxlength="300" placeholder="Venue, room, WITA time…"></div>
+      <label class="calbox"><input type="checkbox" id="ceActive" checked> Active (shown in the schedule)</label>
+      <div class="err" id="ceErr"></div>
+    </div>
+    <div class="dlg-f"><button type="button" class="btn ghost" data-close>Cancel</button><button class="btn primary" id="ceSave">Save</button></div>
+  </form>
+</dialog>
+
+<dialog id="chipDlg">
+  <div class="dlg-h"><h2 id="chName"></h2><button type="button" class="icon" data-close aria-label="Close">✕</button></div>
+  <div class="dlg-b"><p id="chInfo" style="margin:0 0 14px"></p><div class="chbtns" id="chBtns"></div><div class="err" id="chErr"></div></div>
+</dialog>
+
+<dialog id="reasonDlg">
+  <form id="reasonForm" method="dialog">
+    <div class="dlg-h"><h2>Delete entry</h2><button type="button" class="icon" data-close aria-label="Close">✕</button></div>
+    <div class="dlg-b"><p id="rsMsg" style="margin:0 0 12px"></p>
+      <label for="rsText">Reason (the teacher will see this)</label><textarea id="rsText" maxlength="300" required placeholder="e.g. Class was cancelled by the school"></textarea>
+      <div class="err" id="rsErr"></div></div>
+    <div class="dlg-f"><button type="button" class="btn ghost" data-close>Cancel</button><button class="btn primary">Delete</button></div>
+  </form>
+</dialog>
+
+<dialog id="confirmDlg">
+  <div class="dlg-b"><p id="cfMsg" style="margin:0;font-size:17px"></p></div>
+  <div class="dlg-f"><button class="btn ghost" id="cfNo">Cancel</button><button class="btn primary" id="cfYes">OK</button></div>
+</dialog>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+{
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const rp = n => 'Rp ' + Math.round(Number(n) || 0).toLocaleString('id-ID');
+const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const pLabel = p => MONTHS[+p.slice(5,7)-1] + ' ' + p.slice(0,4);
+const dLabel = d => new Date(d + 'T00:00:00').toLocaleDateString('en-GB', {weekday:'short', day:'numeric', month:'short'});
+const shiftP = (p, n) => { let y = +p.slice(0,4), m = +p.slice(5,7) + n; while (m > 12) { m -= 12; y++; } while (m < 1) { m += 12; y--; } return y + '-' + String(m).padStart(2,'0'); };
+const addDays = (d, n) => { const t = new Date(d + 'T00:00:00'); t.setDate(t.getDate() + n); return t.getFullYear() + '-' + String(t.getMonth()+1).padStart(2,'0') + '-' + String(t.getDate()).padStart(2,'0'); };
+const store = { get(k){ try { return localStorage.getItem(k); } catch(e){ return null; } }, set(k,v){ try { v == null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch(e){} } };
+
+const PAGE_VERSION = '9';
+const TABS = ['schedule','mine','review','recap','compare','classes','schools','fees'];
+const PERIOD_TABS = ['mine','review','recap','compare'], WEEK_TABS = ['schedule'];
+let S = { token: store.get('pt_token'), boot: null, period: null, week: null, tab: 'schedule', mine: null, review: null, recap: null, filter: 'Pending', q: '' };
+
+let lastServer = Date.now();
+// Two ways to reach the Google script:
+//  • opened from script.google.com → google.script.run
+//  • opened from its own address (GitHub Pages) → POST to the /exec link written in api.txt.
+//    No Google cookies are sent, so several signed-in Google accounts cannot break it.
+const ON_GOOGLE = !!(window.google && google.script && google.script.run);
+let apiUrl = null;
+async function getApi() {
+  if (apiUrl) return apiUrl;
+  let txt = '';
+  try { const r = await fetch('api.txt', { cache: 'no-store' }); if (r.ok) txt = await r.text(); } catch (e) {}
+  const m = txt.match(/https:\/\/script\.google\.com\/[^\s"'<>]*\/exec/);
+  if (!m) throw new Error('Setup needed: api.txt is missing or does not contain the /exec link.');
+  return (apiUrl = m[0]);
+}
+const OLD_SERVER = 'The page is newer than the server code. In Apps Script, replace Code.gs with the latest Code file, tap Save, then Deploy › Manage deployments › ✏️ › New version › Deploy.';
+function failed(msg, rej) {
+  if (/Unknown request/.test(msg)) msg = OLD_SERVER;
+  if (msg.indexOf('SESSION_EXPIRED') >= 0) { signOut(true, 'You were signed out after 30 minutes without activity. Please sign in again.'); rej(new Error('Your session expired. Please sign in again.')); }
+  else rej(new Error(msg.replace(/^Exception:\s*/, '')));
+}
+function call(fn, ...args) {
+  lastServer = Date.now();
+  return new Promise((res, rej) => {
+    if (ON_GOOGLE) {
+      const runner = google.script.run.withSuccessHandler(res).withFailureHandler(err => failed((err && err.message) || String(err), rej));
+      if (typeof runner[fn] !== 'function') { rej(new Error(OLD_SERVER)); return; }
+      runner[fn](...args);
+      return;
+    }
+    getApi()
+      .then(url => fetch(url, { method: 'POST', body: JSON.stringify({ fn, args }), headers: { 'Content-Type': 'text/plain;charset=utf-8' }, credentials: 'omit', redirect: 'follow' })
+        .catch(() => { throw new Error('Cannot reach the server. Check your internet connection and try again.'); }))
+      .then(r => r.text())
+      .then(t => { try { return JSON.parse(t); } catch (e) { throw new Error('The attendance server did not answer properly. Check that the web app is deployed with access "Anyone" and that api.txt has the latest /exec link.'); } })
+      .then(j => { if (j && j.ok) res(j.result); else failed((j && j.error) || 'Unexpected reply from the server.', rej); })
+      .catch(e => failed(e.message || String(e), rej));
+  });
+}
+let tt;
+function toast(m) { const t = $('#toast'); t.textContent = m; t.classList.add('show'); clearTimeout(tt); tt = setTimeout(() => t.classList.remove('show'), 3200); }
+function confirmBox(msg, yes = 'OK') {
+  return new Promise(res => {
+    const d = $('#confirmDlg'); $('#cfMsg').textContent = msg; $('#cfYes').textContent = yes;
+    const done = v => { d.close(); $('#cfYes').onclick = $('#cfNo').onclick = null; res(v); };
+    $('#cfYes').onclick = () => done(true); $('#cfNo').onclick = () => done(false);
+    d.showModal();
+  });
+}
+function askReason(e) {
+  return new Promise(res => {
+    const d = $('#reasonDlg');
+    $('#rsMsg').textContent = `${e.name} · ${e.school} · ${dLabel(e.date)} ${e.start}–${e.end}`;
+    $('#rsText').value = ''; $('#rsErr').textContent = '';
+    let done = false;
+    $('#reasonForm').onsubmit = ev => { ev.preventDefault(); const v = $('#rsText').value.trim(); if (!v) { $('#rsErr').textContent = 'Please write a reason.'; return; } done = true; d.close(); res(v); };
+    d.onclose = () => { if (!done) res(null); };
+    d.showModal();
+  });
+}
+document.querySelectorAll('[data-close]').forEach(b => b.addEventListener('click', () => b.closest('dialog').close()));
+
+/* ---------- login ---------- */
+async function loadNames() {
+  try {
+    const list = await call('getLoginList');
+    $('#lgName').innerHTML = '<option value="">Choose your name</option>' + list.map(s => `<option value="${esc(s.code)}">${esc(s.name)} (${esc(s.code)})</option>`).join('');
+    const last = store.get('pt_code'); if (last) $('#lgName').value = last;
+  } catch (e) { $('#lgErr').textContent = e.message; }
+}
+$('#loginForm').addEventListener('submit', async ev => {
+  ev.preventDefault();
+  $('#lgErr').textContent = ''; $('#lgInfo').hidden = true; $('#lgBtn').disabled = true;
+  try {
+    const r = await call('login', $('#lgName').value, $('#lgPin').value);
+    S.token = r.token; store.set('pt_token', r.token); store.set('pt_code', $('#lgName').value); touch(true);
+    $('#lgPin').value = '';
+    start(r.boot);
+  } catch (e) { $('#lgErr').textContent = e.message; }
+  $('#lgBtn').disabled = false;
+});
+function signOut(silent, notice) {
+  if (S.token && !silent) call('logout', S.token).catch(() => {});
+  S.token = null; S.boot = null; store.set('pt_token', null); store.set('pt_active', null);
+  document.querySelectorAll('dialog[open]').forEach(d => d.close());
+  TABS.forEach(id => $('#' + id).innerHTML = ''); // leave nothing on screen for the next person
+  S.mine = S.review = S.recap = S.schools = S.fees = S.sched = S.cmp = S.classesData = null; S.period = null; S.week = null; S.tab = 'schedule';
+  $('#lgInfo').textContent = notice || ''; $('#lgInfo').hidden = !notice;
+  $('#mainView').hidden = true; $('#loginWrap').hidden = false; $('#pinBtn').hidden = $('#outBtn').hidden = true; $('#who').textContent = '';
+  loadNames();
+}
+$('#outBtn').onclick = () => signOut(false);
+
+/* ---------- main ---------- */
+function start(boot) {
+  S.boot = boot; S.period = S.period || boot.currentPeriod;
+  if (!S.week) { const w = new Date(boot.today + 'T00:00:00').getDay(); S.week = mondayOf(w === 0 ? addDays(boot.today, 1) : boot.today); } // Sunday → next week
+  $('#loginWrap').hidden = true; $('#mainView').hidden = false; $('#pinBtn').hidden = $('#outBtn').hidden = false;
+  $('#who').textContent = boot.me.name + (boot.me.head ? ' · ' + boot.me.role : '');
+  document.querySelectorAll('#tabs [data-head]').forEach(b => b.hidden = !boot.me.head);
+  $('#groups').hidden = !boot.me.head;
+  $('#tabs').classList.toggle('many', !!boot.me.head);
+  const vb = $('#verBanner');
+  vb.hidden = boot.version === PAGE_VERSION;
+  vb.textContent = `Update needed: this page is version ${PAGE_VERSION} but Code.gs on the server is ${boot.version ? 'version ' + boot.version : 'an older version'}. In Apps Script, paste Code_v${PAGE_VERSION}.txt into Code.gs, tap Save, then Deploy › Manage deployments › ✏️ › New version › Deploy.`;
+  fillForm();
+  setTab(S.tab);
+}
+function periodHeader(range) {
+  $('#pLabel').textContent = pLabel(S.period);
+  $('#pRange').textContent = range ? dLabel(range.from) + ' – ' + dLabel(range.to) : '';
+}
+function weekHeader() {
+  $('#pLabel').textContent = 'Week of ' + new Date(S.week + 'T00:00:00').toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+  $('#pRange').textContent = dLabel(S.week) + ' – ' + dLabel(addDays(S.week, 5));
+}
+function mondayOf(d) { const w = new Date(d + 'T00:00:00').getDay(); return addDays(d, w === 0 ? -6 : 1 - w); }
+const step = n => { if (WEEK_TABS.includes(S.tab)) S.week = addDays(S.week, 7 * n); else S.period = shiftP(S.period, n); refresh(); };
+$('#prevP').onclick = () => step(-1);
+$('#nextP').onclick = () => step(1);
+function syncArrows() {
+  const none = !PERIOD_TABS.includes(S.tab) && !WEEK_TABS.includes(S.tab);
+  $('#prevP').hidden = $('#nextP').hidden = none;
+  $('#prevP').setAttribute('aria-label', WEEK_TABS.includes(S.tab) ? 'Previous week' : 'Previous period');
+  $('#nextP').setAttribute('aria-label', WEEK_TABS.includes(S.tab) ? 'Next week' : 'Next period');
+  if (WEEK_TABS.includes(S.tab)) weekHeader(); else if (PERIOD_TABS.includes(S.tab)) periodHeader();
+}
+$('#tabs').addEventListener('click', e => { const b = e.target.closest('[data-tab]'); if (b) setTab(b.dataset.tab); });
+const GROUP_OF = { schedule: 'sched', classes: 'sched', mine: 'att', review: 'att', recap: 'att', compare: 'att', schools: 'att', fees: 'att' };
+const lastInGroup = { sched: 'schedule', att: 'mine' };
+$('#groups').addEventListener('click', e => { const b = e.target.closest('[data-group]'); if (b) setTab(lastInGroup[b.dataset.group]); });
+function setTab(t) {
+  if (!S.boot.me.head && !['schedule','mine'].includes(t)) t = 'schedule';
+  S.tab = t;
+  const g = GROUP_OF[t]; lastInGroup[g] = t;
+  document.querySelectorAll('#groups [data-group]').forEach(b => b.setAttribute('aria-pressed', b.dataset.group === g));
+  document.querySelectorAll('#tabs [data-tab]').forEach(b => {
+    b.setAttribute('aria-selected', b.dataset.tab === t);
+    if (S.boot.me.head) b.hidden = b.dataset.g !== g; // head teachers: only the tabs of the chosen group
+  });
+  TABS.forEach(id => $('#' + id).hidden = id !== t);
+  const cur = document.querySelector(`#tabs [data-tab="${t}"]`); if (cur && cur.scrollIntoView) cur.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  syncArrows();
+  refresh();
+}
+async function refresh() {
+  const tab = S.tab, sec = $('#' + tab); sec.classList.add('loading');
+  if (!sec.innerHTML) sec.innerHTML = '<div class="empty">Loading…</div>';
+  try {
+    const load = { schedule: ['weekSchedule', [S.week], d => { S.sched = d; renderSchedule(); }], compare: ['compareAttendance', [S.period], d => { S.cmp = d; renderCompare(); }],
+      classes: ['classList', [], d => { S.classesData = d; renderClasses(); }], mine: ['myEntries', [S.period], d => { S.mine = d; renderMine(); }],
+      review: ['reviewData', [S.period], d => { S.review = d; renderReview(); }], recap: ['recap', [S.period], d => { S.recap = d; renderRecap(); }],
+      schools: ['schoolList', [], d => { S.schools = d; renderSchools(); }], fees: ['feeData', [], d => { S.fees = d; renderFees(); }] }[tab];
+    if (tab === 'schedule') weekHeader();
+    const key = tab + '|' + S.week + '|' + S.period;
+    const data = await call(load[0], S.token, ...load[1]);
+    if (S.tab === tab && key === tab + '|' + S.week + '|' + S.period) load[2](data); // otherwise the user moved on – ignore this late answer
+  } catch (e) { if (S.tab === tab) sec.innerHTML = `<div class="empty">${esc(e.message)}</div>`; }
+  sec.classList.remove('loading');
+}
+
+/* ---------- my attendance ---------- */
+function renderMine() {
+  const d = S.mine; periodHeader(d.range);
+  const L = d.entries;
+  const ver = L.filter(e => e.status === 'Verified');
+  const sum = (arr, f) => arr.reduce((a, e) => a + f(e), 0);
+  const pending = L.filter(e => e.status === 'Pending');
+  let h = '';
+  if (d.locked) h += `<div class="banner">This period is locked – pay has been calculated. Contact the head teacher for corrections.</div>`;
+  const head = S.boot.me.head;
+  const hrs = arr => { const n = arr.reduce((a, e) => a + (+e.hours || 0), 0); return n + (n === 1 ? ' hour' : ' hours'); };
+  if (!head) h += `<div class="sum">
+    <div class="big"><span>Verified classes</span><b>${ver.length}</b><span>${hrs(ver)}</span></div>
+    <div><span>All classes this period</span><b>${L.filter(e => e.status !== 'Deleted').length}</b><span>${hrs(L.filter(e => e.status !== 'Deleted'))}</span></div>
+    <div><span>Waiting for verification</span><b>${pending.length}</b><span>${hrs(pending)}</span></div>
+    <div><span>Rejected</span><b>${L.filter(e => e.status === 'Rejected').length}</b><span>fix and save again</span></div>
+  </div>`;
+  else h += `<div class="sum">
+    <div class="big"><span>Verified pay</span><b>${rp(sum(ver, e => e.amount - e.deduction))}</b>${sum(ver, e => e.deduction) ? `<span>after ${rp(sum(ver, e => e.deduction))} late deductions</span>` : ''}</div>
+    <div><span>PKAB</span><b>${rp(sum(ver.filter(e => e.payer !== 'BBB'), e => e.amount - e.deduction))}</b></div>
+    <div><span>BBB</span><b>${rp(sum(ver.filter(e => e.payer === 'BBB'), e => e.amount - e.deduction))}</b></div>
+    <div><span>Waiting for verification</span><b>${pending.length}</b><span>${rp(sum(pending, e => e.amount - e.deduction))} estimated</span></div>
+  </div>`;
+  if (!L.length) h += `<div class="panel empty">No attendance recorded for ${pLabel(S.period)} yet.<br>Tap <b>Add attendance</b> after each class.</div>`;
+  const byDay = {};
+  L.forEach(e => (byDay[e.date] = byDay[e.date] || []).push(e));
+  Object.keys(byDay).sort().reverse().forEach(day => {
+    h += `<div class="day">${dLabel(day)}</div><div class="panel">` + byDay[day].map(e => entryRow(e, d.locked)).join('') + `</div>`;
+  });
+  h += d.locked ? '' : `<div class="fab"><button class="btn primary" id="addBtn">＋ Add attendance</button></div>`;
+  $('#mine').innerHTML = h;
+  const ab = $('#addBtn'); if (ab) ab.onclick = () => openEntry();
+}
+function entryRow(e, locked) {
+  const canEdit = !locked && (e.status === 'Pending' || (e.status === 'Rejected' && S.boot.settings.editAfterReject));
+  const del = e.status === 'Deleted';
+  return `<div class="entry${del ? ' gone' : ''}">
+    <div class="t">${esc(e.start)}<small>${esc(e.end)} · ${e.hours} h</small></div>
+    <div><div class="s">${esc(e.school)}${e.payer ? ` <span class="chip ${esc(e.payer)}">${esc(e.payer)}</span>` : ''}</div>
+      <div class="meta">${esc(e.role)}${e.late ? ' · <span class="warnc">' + e.late + ' min late</span>' : ''}${e.note ? ' · ' + esc(e.note) : ''}</div></div>
+    <div class="amt">${S.boot.me.head ? rp(e.amount - e.deduction) + (e.deduction ? `<small>−${rp(e.deduction)} late</small>` : '') : ''}<div><span class="chip ${esc(e.status)}">${esc(e.status)}</span></div></div>
+    ${e.status === 'Rejected' && e.reviewNote ? `<div class="rnote">Rejected: ${esc(e.reviewNote)}</div>` : ''}
+    ${e.status === 'Verified' && e.reviewNote ? `<div class="rnote" style="color:var(--mute)">Note: ${esc(e.reviewNote)}</div>` : ''}
+    ${del ? `<div class="rnote">Deleted by ${esc(e.reviewedBy || 'the head teacher')}: ${esc(e.reviewNote)}. This class will not be paid.</div>` : ''}
+    <div class="acts">
+      ${canEdit ? `<button class="btn sm" data-edit="${esc(e.id)}">Edit</button>` : ''}
+      ${locked || del ? '' : `<button class="btn sm ghost" data-copy="${esc(e.id)}">Repeat next week</button>`}
+      ${locked ? '' : `<button class="btn sm ghost" data-del="${esc(e.id)}">${del ? 'OK, remove' : 'Delete'}</button>`}
+    </div></div>`;
+}
+$('#mine').addEventListener('click', async ev => {
+  const b = ev.target.closest('button'); if (!b) return;
+  const find = id => S.mine.entries.find(e => e.id === id);
+  if (b.dataset.edit) openEntry(find(b.dataset.edit));
+  if (b.dataset.copy) { const e = find(b.dataset.copy); openEntry({ ...e, id: null, date: addDays(e.date, 7), late: 0, note: '' }); }
+  if (b.dataset.del) {
+    const e = find(b.dataset.del);
+    if (e.status !== 'Deleted' && !await confirmBox(`Delete ${e.school} on ${dLabel(e.date)}?` + (e.status === 'Verified' ? ' It is already verified – deleting it removes it from your pay.' : ''), 'Delete')) return;
+    try { await call('deleteEntry', S.token, e.id); toast('Deleted'); refresh(); } catch (err) { toast(err.message); }
+  }
+});
+
+/* ---------- entry form ---------- */
+function fillForm() {
+  const B = S.boot;
+  const grp = (label, list) => list.length ? `<optgroup label="${esc(label)}">` + list.map(s => `<option value="${esc(s.name)}">${esc(s.name)}</option>`).join('') + '</optgroup>' : '';
+  const sch = B.schools.slice().sort((a, b) => a.name.localeCompare(b.name));
+  $('#fSchool').innerHTML = '<option value="">Choose…</option>' +
+    grp('Special events', sch.filter(s => s.type === 'Event')) +
+    (B.me.head
+      ? grp('PKAB schools', sch.filter(s => s.type !== 'Event' && s.payer === 'PKAB')) + grp('BBB schools', sch.filter(s => s.type !== 'Event' && s.payer === 'BBB'))
+      : grp('Schools', sch.filter(s => s.type !== 'Event')));
+  $('#fRole').innerHTML = B.roles.map(r => `<option>${esc(r)}</option>`).join('');
+  $('#lateField').hidden = !B.me.head;
+  if (B.me.head) {
+    $('#staffField').hidden = false;
+    $('#fStaff').innerHTML = B.staff.filter(s => s.active).sort((a, b) => a.name.localeCompare(b.name)).map(s => `<option value="${esc(s.code)}">${esc(s.name)} (${esc(s.code)})</option>`).join('');
+  }
+}
+// Times in 15-minute steps (06:00–21:45).
+const TIMES = [];
+for (let m = 6 * 60; m < 22 * 60; m += 15) TIMES.push(String(Math.floor(m / 60)).padStart(2, '0') + ':' + String(m % 60).padStart(2, '0'));
+function timeSel(sel, val) {
+  const list = val && !TIMES.includes(val) ? TIMES.concat(val).sort() : TIMES; // keep an old odd time when editing
+  sel.innerHTML = '<option value="">--:--</option>' + list.map(t => `<option ${t === val ? 'selected' : ''}>${t}</option>`).join('');
+}
+let editing = null;
+function openEntry(e) {
+  editing = e && e.id ? e.id : null;
+  $('#entryTitle').textContent = editing ? 'Edit attendance' : 'Add attendance';
+  $('#entryErr').textContent = '';
+  const B = S.boot;
+  $('#fStaff').value = (e && e.code) || B.me.code;
+  $('#fStaff').disabled = !!editing;
+  $('#fDate').value = (e && e.date) || B.today;
+  $('#fSchool').value = (e && e.school) || '';
+  timeSel($('#fStart'), (e && e.start) || '');
+  timeSel($('#fEnd'), (e && e.end) || '');
+  $('#fHours').value = (e && e.hours) || '';
+  $('#fRole').value = (e && e.role) || B.roles[0];
+  $('#fLate').value = (e && e.late) || 0;
+  $('#fNote').value = (e && e.note) || '';
+  hoursTouched = false; // hours follow the times until typed by hand
+  preview();
+  $('#entryDlg').showModal();
+}
+let hoursTouched = false;
+function autoHours() {
+  const a = $('#fStart').value, b = $('#fEnd').value;
+  if (!a || !b || hoursTouched) return;
+  const m = (+b.slice(0,2)*60 + +b.slice(3)) - (+a.slice(0,2)*60 + +a.slice(3));
+  if (m > 0) $('#fHours').value = m / 60; // exact: 12:15–15:30 = 3.25 h
+}
+// Mirrors suggest_() in Code.gs: special event fee → school exception → teacher's fee type.
+function suggest(school, code, role, hours) {
+  const P = S.boot.pay, sl = school.toLowerCase(), rl = role.toLowerCase();
+  let hit = null, src = '', best = -1;
+  P.eventFees.forEach(f => {
+    if (f.event.toLowerCase() !== sl || (f.staff && f.staff !== code) || (f.role && f.role.toLowerCase() !== rl)) return;
+    const sc = (f.staff ? 2 : 0) + (f.role ? 1 : 0);
+    if (sc > best) { best = sc; hit = f; src = f.staff ? 'Special event fee' : 'Event fee'; }
+  });
+  if (!hit) { const r = P.schoolRates.find(r => r.school.toLowerCase() === sl && r.role.toLowerCase() === rl); if (r) { hit = r; src = 'School rate'; } }
+  if (!hit) {
+    const t = P.feeTypes[P.staffType[code]] ? P.staffType[code] : (P.feeTypes.Standard ? 'Standard' : P.typeOrder[0]);
+    const k = Object.keys(P.feeTypes[t] || {}).find(k => k.toLowerCase() === rl);
+    if (k) { hit = P.feeTypes[t][k]; src = t + ' fee'; }
+  }
+  if (!hit) return { amount: 0, basis: 'No fee set for this role' };
+  return hit.per === 'Session' ? { amount: hit.amount, basis: src + ': ' + rp(hit.amount) + ' per session' } : { amount: Math.round(hit.amount * hours), basis: src + ': ' + rp(hit.amount) + ' × ' + hours + ' h' };
+}
+function preview() {
+  $('#pvBox').hidden = !S.boot.me.head;
+  if (!S.boot.me.head) return;
+  const st = S.boot.settings, late = +$('#fLate').value || 0;
+  const sug = suggest($('#fSchool').value, $('#fStaff').value || S.boot.me.code, $('#fRole').value, +$('#fHours').value || 0);
+  const ded = late > st.lateGrace ? Math.round(st.lateFlat + st.latePerMin * (late - st.lateGrace)) : 0;
+  $('#pvBasis').textContent = sug.basis + (ded ? ' − ' + rp(ded) + ' late' : '');
+  $('#pvAmt').textContent = rp(sug.amount - ded);
+}
+$('#fStart').addEventListener('change', () => { // suggest a 1-hour class when End is still empty
+  const a = $('#fStart').value;
+  if (a && !$('#fEnd').value) { const m = +a.slice(0,2) * 60 + +a.slice(3) + 60; const t = String(Math.floor(m / 60)).padStart(2,'0') + ':' + String(m % 60).padStart(2,'0'); if (TIMES.includes(t)) $('#fEnd').value = t; }
+});
+['#fStart','#fEnd'].forEach(s => $(s).addEventListener('change', () => { autoHours(); preview(); }));
+$('#fHours').addEventListener('input', () => { hoursTouched = true; preview(); });
+['#fSchool','#fRole','#fLate','#fStaff'].forEach(s => $(s).addEventListener('input', preview));
+$('#entryForm').addEventListener('submit', async ev => {
+  ev.preventDefault();
+  $('#entryErr').textContent = ''; $('#entrySave').disabled = true;
+  const data = { id: editing, code: $('#fStaff').value, date: $('#fDate').value, school: $('#fSchool').value, start: $('#fStart').value, end: $('#fEnd').value,
+    hours: $('#fHours').value, role: $('#fRole').value, note: $('#fNote').value };
+  if (S.boot.me.head) data.late = $('#fLate').value;
+  try {
+    const saved = await call('saveEntry', S.token, data);
+    $('#entryDlg').close();
+    toast(editing ? 'Updated' : 'Saved – waiting for verification');
+    if (saved.period !== S.period && S.tab === 'mine') { S.period = saved.period; }
+    refresh();
+  } catch (e) { $('#entryErr').textContent = e.message; }
+  $('#entrySave').disabled = false;
+});
+
+/* ---------- change PIN ---------- */
+$('#pinBtn').onclick = () => { $('#pinErr').textContent = ''; $('#pinForm').reset(); $('#pinDlg').showModal(); };
+$('#pinForm').addEventListener('submit', async ev => {
+  ev.preventDefault();
+  try { await call('changePin', S.token, $('#pOld').value, $('#pNew').value); $('#pinDlg').close(); toast('PIN changed'); }
+  catch (e) { $('#pinErr').textContent = e.message; }
+});
+
+/* ---------- verify (head teacher) ---------- */
+function renderReview() {
+  const d = S.review; periodHeader(d.range);
+  const counts = { Pending: 0, Verified: 0, Rejected: 0, Deleted: 0 };
+  d.entries.forEach(e => counts[e.status] = (counts[e.status] || 0) + 1);
+  const q = S.q.toLowerCase();
+  const list = d.entries.filter(e => (S.filter === 'All' || e.status === S.filter) && (!q || (e.name + ' ' + e.code + ' ' + e.school).toLowerCase().includes(q)));
+  let h = d.locked ? `<div class="banner">This period is locked. Unlock it on the Recap tab to make changes.</div>` : '';
+  h += `<div class="tools">
+    <select id="rvFilter" aria-label="Status filter">${['Pending','Rejected','Verified','Deleted','All'].map(s => `<option value="${s}" ${S.filter === s ? 'selected' : ''}>${s}${s !== 'All' ? ' (' + counts[s] + ')' : ' (' + d.entries.length + ')'}</option>`).join('')}</select>
+    <input id="rvQ" type="search" placeholder="Search name, code, school" value="${esc(S.q)}">
+    ${d.locked ? '' : '<button class="btn" id="rvAdd">＋ Add for a staff member</button>'}
+  </div>`;
+  if (!list.length) h += `<div class="panel empty">${S.filter === 'Pending' && !S.q ? 'Nothing waiting for verification.' : 'No entries match.'}</div>`;
+  const groups = {};
+  list.forEach(e => (groups[e.code] = groups[e.code] || []).push(e));
+  Object.keys(groups).forEach(code => {
+    const g = groups[code], pend = g.filter(e => e.status === 'Pending');
+    h += `<div class="panel person"><div class="person-h"><h3>${esc(g[0].name)} <span class="meta">${esc(code)}</span></h3>
+      <span class="meta">${g.length} entr${g.length > 1 ? 'ies' : 'y'}</span>
+      ${pend.length && !d.locked ? `<button class="btn sm ok" data-verifyall="${esc(code)}">Verify all ${pend.length}</button>` : ''}</div>`;
+    h += g.map(e => `<div class="rv" data-id="${esc(e.id)}">
+      <div><b>${dLabel(e.date)}</b> · ${esc(e.start)}–${esc(e.end)} · ${e.hours} h<br>
+        ${esc(e.school)} <span class="chip ${esc(e.payer)}">${esc(e.payer)}</span> · ${esc(e.role)}
+        ${e.late ? `· <span class="warnc">${e.late} min late</span>` : ''}${e.note ? `<br><span class="meta" style="color:var(--mute);font-size:14px">“${esc(e.note)}”</span>` : ''}
+        <div style="margin-top:4px"><span class="chip ${esc(e.status)}">${esc(e.status)}</span>${e.reviewedBy ? ` <span style="font-size:13px;color:var(--mute)">by ${esc(e.reviewedBy)}</span>` : ''}</div></div>
+      <div class="inputs">
+        <div><label>Late (min)</label><input data-f="late" inputmode="numeric" value="${e.late || 0}" ${d.locked ? 'disabled' : ''}></div>
+        <div><label>Amount</label><input data-f="amount" inputmode="numeric" value="${e.amount}" ${d.locked ? 'disabled' : ''}></div>
+        <div><label>Deduction</label><input data-f="deduction" inputmode="numeric" value="${e.deduction}" ${d.locked ? 'disabled' : ''}></div>
+        <div><label>Note</label><input data-f="note" value="${esc(e.reviewNote)}" placeholder="Reason" ${d.locked ? 'disabled' : ''}></div>
+      </div>
+      <div class="btns">${d.locked ? '' : e.status === 'Deleted'
+        ? `<span class="rnote">Deleted: ${esc(e.reviewNote)}</span><button class="btn sm" data-act="Pending">Restore</button>`
+        : e.status === 'Verified'
+        ? `<button class="btn sm" data-act="Pending">Undo</button><button class="btn sm ok" data-act="Verified">Save</button>`
+        : `<button class="btn sm ghost" data-act="Rejected">Reject</button><button class="btn sm ok" data-act="Verified">Verify</button>`}
+        ${d.locked || e.status === 'Deleted' ? '' : `<button class="btn sm ghost" data-redit="${esc(e.id)}">Edit</button><button class="btn sm ghost" data-rdel="${esc(e.id)}">Delete</button>`}</div>
+    </div>`).join('') + '</div>';
+  });
+  $('#review').innerHTML = h;
+  $('#rvFilter').onchange = e => { S.filter = e.target.value; renderReview(); };
+  $('#rvQ').oninput = e => { S.q = e.target.value; clearTimeout(rvT); rvT = setTimeout(() => { renderReview(); const i = $('#rvQ'); i.focus(); i.setSelectionRange(i.value.length, i.value.length); }, 250); };
+  const add = $('#rvAdd'); if (add) add.onclick = () => openEntry({ code: S.boot.me.code });
+}
+let rvT;
+// Typing late minutes fills in the suggested deduction (head can still overwrite it).
+$('#review').addEventListener('input', ev => {
+  if (ev.target.dataset.f !== 'late') return;
+  const st = S.boot.settings, late = +ev.target.value.replace(/\D/g, '') || 0;
+  const ded = late > st.lateGrace ? Math.round(st.lateFlat + st.latePerMin * (late - st.lateGrace)) : 0;
+  if (st.lateFlat || st.latePerMin) ev.target.closest('.rv').querySelector('[data-f=deduction]').value = ded;
+});
+function readRow(row) {
+  const v = f => row.querySelector(`[data-f="${f}"]`).value;
+  return { id: row.dataset.id, late: v('late').replace(/\D/g, ''), amount: v('amount').replace(/\D/g, ''), deduction: v('deduction').replace(/\D/g, ''), note: v('note') };
+}
+$('#review').addEventListener('click', async ev => {
+  const b = ev.target.closest('button'); if (!b) return;
+  let items, action;
+  if (b.dataset.redit) { const e = S.review.entries.find(x => x.id === b.dataset.redit); openEntry(e); return; }
+  if (b.dataset.rdel) {
+    const e = S.review.entries.find(x => x.id === b.dataset.rdel);
+    let reason = '';
+    if (e.code === S.boot.me.code) { if (!await confirmBox(`Delete your ${e.school} entry on ${dLabel(e.date)}?`, 'Delete')) return; }
+    else { reason = await askReason(e); if (reason === null) return; }
+    try { await call('deleteEntry', S.token, e.id, reason); toast(reason ? 'Deleted – ' + e.name + ' will see your reason' : 'Deleted'); refresh(); } catch (err) { toast(err.message); }
+    return;
+  }
+  if (b.dataset.act) { action = b.dataset.act; items = [readRow(b.closest('.rv'))]; }
+  if (b.dataset.verifyall) {
+    action = 'Verified';
+    const ids = S.review.entries.filter(e => e.code === b.dataset.verifyall && e.status === 'Pending').map(e => e.id);
+    items = [...document.querySelectorAll('#review .rv')].filter(r => ids.includes(r.dataset.id)).map(readRow);
+  }
+  if (!items) return;
+  if (action === 'Pending' && b.textContent === 'Restore') items[0].note = '';
+  if (action === 'Rejected' && !items[0].note.trim()) { toast('Write the reason in the Note box first.'); b.closest('.rv').querySelector('[data-f=note]').focus(); return; }
+  b.disabled = true;
+  try {
+    const done = await call('reviewEntries', S.token, items, action);
+    done.forEach(u => { const i = S.review.entries.findIndex(e => e.id === u.id); if (i >= 0) S.review.entries[i] = u; });
+    toast(action === 'Verified' ? `Verified ${done.length}` : action === 'Rejected' ? 'Rejected' : b.textContent === 'Restore' ? 'Restored – waiting for verification' : 'Back to pending');
+    renderReview();
+  } catch (e) { toast(e.message); b.disabled = false; }
+});
+
+/* ---------- recap ---------- */
+function renderRecap() {
+  const d = S.recap; periodHeader(d.range);
+  const R = d.rows, tot = k => R.reduce((a, r) => a + r[k], 0);
+  const waiting = tot('pending');
+  let h = '';
+  if (waiting) h += `<div class="banner">${waiting} entr${waiting > 1 ? 'ies are' : 'y is'} not verified yet and ${waiting > 1 ? 'are' : 'is'} not counted below.</div>`;
+  h += `<div class="sum">
+    <div class="big"><span>Total to pay</span><b>${rp(tot('total'))}</b></div>
+    <div><span>PKAB</span><b>${rp(tot('pkab'))}</b></div>
+    <div><span>BBB</span><b>${rp(tot('bbb'))}</b></div>
+    <div><span>Late deductions</span><b>${rp(tot('deduction'))}</b><span>${R.filter(r => r.total > 0).length} ${R.filter(r => r.total > 0).length === 1 ? 'person' : 'people'} paid</span></div>
+  </div>
+  <div class="tools">
+    <button class="btn primary" id="rcSheet">Write recap to Google Sheet</button>
+    <button class="btn" id="rcCopy">Copy table</button>
+    <button class="btn ${d.locked ? '' : 'ghost'}" id="rcLock">${d.locked ? 'Unlock period' : 'Lock period'}</button>
+  </div>`;
+  if (!R.length) h += `<div class="panel empty">No attendance in ${pLabel(S.period)}.</div>`;
+  else h += `<div class="panel scroll"><table class="stack"><thead><tr><th>Name</th><th class="num">PKAB</th><th class="num">BBB</th><th class="num">Total</th><th class="num">Deductions</th><th>Not verified</th><th>Bank account</th></tr></thead><tbody>` +
+    R.map(r => `<tr><td class="nm"><b>${esc(r.name)}</b> <span style="color:var(--mute);font-size:13px">${esc(r.code)}</span></td>
+      <td class="num" data-l="PKAB">${rp(r.pkab)}</td><td class="num" data-l="BBB">${rp(r.bbb)}</td><td class="num" data-l="Total"><b>${rp(r.total)}</b></td><td class="num" data-l="Deductions">${r.deduction ? rp(r.deduction) : '–'}</td>
+      <td data-l="Status">${r.pending ? `<span class="warnc">${r.pending} pending</span>` : ''}${r.rejected ? ` <span style="color:var(--bad)">${r.rejected} rejected</span>` : ''}</td>
+      <td class="bank" data-l="Bank">${esc(r.bank)}</td></tr>`).join('') +
+    `</tbody><tfoot><tr><td class="lbl" data-l="">Total</td><td class="num" data-l="PKAB">${rp(tot('pkab'))}</td><td class="num" data-l="BBB">${rp(tot('bbb'))}</td><td class="num" data-l="Total">${rp(tot('total'))}</td><td class="num" data-l="Deductions">${rp(tot('deduction'))}</td><td></td><td></td></tr></tfoot></table></div>`;
+  $('#recap').innerHTML = h;
+  $('#rcSheet').onclick = async e => {
+    e.target.disabled = true;
+    try { const r = await call('writeRecapSheet', S.token, S.period); toast(`Saved to sheets "${r.sheet}" and "Detail ${S.period}"`); } catch (err) { toast(err.message); }
+    e.target.disabled = false;
+  };
+  $('#rcCopy').onclick = async () => {
+    const tsv = [['Name','Code','PKAB','BBB','Total','Deductions','Bank account'].join('\t')].concat(R.map(r => [r.name, r.code, r.pkab, r.bbb, r.total, r.deduction, r.bank.replace(/\s+/g, ' ')].join('\t'))).join('\n');
+    try { await navigator.clipboard.writeText(tsv); toast('Copied – paste into Excel or Sheets'); } catch (err) { toast('Copy not allowed here – use "Write recap to Google Sheet".'); }
+  };
+  $('#rcLock').onclick = async () => {
+    const lock = !d.locked;
+    if (lock && waiting && !await confirmBox(`${waiting} entries are still not verified. Lock anyway? They will not be paid this period.`, 'Lock')) return;
+    if (!lock && !await confirmBox('Unlock this period? Teachers will be able to add and edit entries again.', 'Unlock')) return;
+    try { S.boot.locked = await call('setPeriodLock', S.token, S.period, lock); toast(lock ? 'Period locked' : 'Period unlocked'); refresh(); } catch (err) { toast(err.message); }
+  };
+}
+
+/* ---------- schools (head teacher assigns PKAB / BBB) ---------- */
+function renderSchools() {
+  $('#pLabel').textContent = 'Schools & payers'; $('#pRange').textContent = 'Only head teachers see this';
+  const L = S.schools || [], q = (S.sq || '').toLowerCase();
+  const list = L.filter(x => !q || x.name.toLowerCase().includes(q) || x.payer.toLowerCase() === q);
+  const n = p => L.filter(x => x.active && x.payer === p).length;
+  let h = `<div class="sum three">
+    <div><span>PKAB schools</span><b>${n('PKAB')}</b></div>
+    <div><span>BBB schools</span><b>${n('BBB')}</b></div>
+    <div><span>Inactive</span><b>${L.filter(x => !x.active).length}</b></div></div>
+  <form class="panel addsch" id="schAdd">
+    <div class="f1"><label for="nsName">New school or event</label><input id="nsName" placeholder="e.g. SIS Kelapa Gading" required></div>
+    <div><label for="nsPayer">Paid by</label><select id="nsPayer"><option>PKAB</option><option>BBB</option></select></div>
+    <div><label for="nsType">Type</label><select id="nsType"><option>School</option><option>Event</option></select></div>
+    <button class="btn primary">Add</button>
+  </form>
+  <div class="tools"><input id="schQ" type="search" placeholder="Search schools, or type PKAB / BBB" value="${esc(S.sq || '')}"></div>
+  <div class="panel">` + (list.length ? list.map(x => `<div class="sch" data-name="${esc(x.name)}">
+      <input data-k="name" value="${esc(x.name)}" aria-label="School name">
+      <div class="seg" role="group" aria-label="Paid by">${['PKAB','BBB'].map(p => `<button type="button" data-payer="${p}" aria-pressed="${x.payer === p}">${p}</button>`).join('')}</div>
+      <select data-k="type" aria-label="Type"><option ${x.type === 'School' ? 'selected' : ''}>School</option><option ${x.type === 'Event' ? 'selected' : ''}>Event</option></select>
+      <label class="act"><input type="checkbox" data-k="active" ${x.active ? 'checked' : ''}> Active</label>
+      <button type="button" class="btn sm" data-save hidden>Save</button>
+    </div>`).join('') : '<div class="empty">No schools match.</div>') + '</div>';
+  $('#schools').innerHTML = h;
+  $('#schQ').oninput = e => { S.sq = e.target.value; clearTimeout(rvT); rvT = setTimeout(() => { renderSchools(); const i = $('#schQ'); i.focus(); i.setSelectionRange(i.value.length, i.value.length); }, 250); };
+  $('#schAdd').onsubmit = async ev => {
+    ev.preventDefault();
+    try {
+      await call('saveSchool', S.token, { name: $('#nsName').value, payer: $('#nsPayer').value, type: $('#nsType').value, active: true });
+      toast('School added'); await reloadSchools();
+    } catch (e) { toast(e.message); }
+  };
+}
+async function reloadSchools() {
+  S.schools = await call('schoolList', S.token); renderSchools();
+  S.boot = await call('boot', S.token); fillForm(); // refresh the school picker
+}
+async function saveSchoolRow(row) {
+  const payer = row.querySelector('[data-payer][aria-pressed=true]').dataset.payer;
+  const data = { oldName: row.dataset.name, name: row.querySelector('[data-k=name]').value, payer, type: row.querySelector('[data-k=type]').value, active: row.querySelector('[data-k=active]').checked };
+  row.classList.add('loading');
+  try {
+    const r = await call('saveSchool', S.token, data);
+    toast(`Saved ${r.school.name} → ${r.school.payer}` + (r.entriesUpdated ? ` (${r.entriesUpdated} open entries updated)` : ''));
+    await reloadSchools();
+  } catch (e) { toast(e.message); row.classList.remove('loading'); }
+}
+$('#schools').addEventListener('click', ev => {
+  const b = ev.target.closest('button'); if (!b) return;
+  const row = b.closest('.sch'); if (!row) return;
+  if (b.dataset.payer) { row.querySelectorAll('[data-payer]').forEach(x => x.setAttribute('aria-pressed', x === b)); saveSchoolRow(row); }
+  if ('save' in b.dataset) saveSchoolRow(row);
+});
+$('#schools').addEventListener('change', ev => {
+  const row = ev.target.closest('.sch'); if (!row) return;
+  if (ev.target.dataset.k === 'name') { row.querySelector('[data-save]').hidden = false; return; }
+  saveSchoolRow(row);
+});
+
+/* ---------- fees (head teacher) ---------- */
+const perLbl = p => p === 'Session' ? '/ session' : '/ hour';
+function feeRoles() {
+  const F = S.fees, seen = {}, out = [];
+  S.boot.roles.concat(...F.feeTypes.map(t => Object.keys(t.rates))).forEach(r => { const k = r.toLowerCase(); if (!seen[k]) { seen[k] = 1; out.push(r); } });
+  return out;
+}
+function rolePer(role) {
+  for (const t of S.fees.feeTypes) { const k = Object.keys(t.rates).find(k => k.toLowerCase() === role.toLowerCase()); if (k) return t.rates[k].per; }
+  return /transport/i.test(role) ? 'Session' : 'Hour';
+}
+function renderFees() {
+  $('#pLabel').textContent = 'Fees'; $('#pRange').textContent = 'Only head teachers see this';
+  const F = S.fees, roles = feeRoles(), q = (S.fq || '').toLowerCase();
+  const count = t => F.staff.filter(x => (x.feeType || F.defaultType) === t).length;
+  const typeCard = (t, isNew) => `<form class="panel ftype" data-old="${isNew ? '' : esc(t.name)}">
+      <div class="ft-h"><input name="name" value="${isNew ? '' : esc(t.name)}" placeholder="New fee type name" aria-label="Fee type name" required>
+        ${isNew ? '' : `<span class="meta">${count(t.name)} teacher${count(t.name) === 1 ? '' : 's'}${t.name === F.defaultType ? ' · default' : ''}</span>`}</div>
+      <div class="ft-g">${roles.map(r => { const k = Object.keys(t.rates).find(k => k.toLowerCase() === r.toLowerCase()); const v = k ? t.rates[k].amount : '';
+        return `<div><label>${esc(r)} <span class="per">${perLbl(rolePer(r))}</span></label><input data-role="${esc(r)}" inputmode="numeric" value="${v === '' ? '' : Number(v).toLocaleString('id-ID')}" placeholder="Rp"></div>`; }).join('')}</div>
+      <div class="ft-f">${isNew ? '<button class="btn primary sm">Add fee type</button>' : `<button type="button" class="btn sm ghost" data-delft="${esc(t.name)}">Delete type</button><button class="btn sm primary">Save</button>`}</div>
+    </form>`;
+  const staffList = F.staff.filter(x => !q || (x.name + ' ' + x.code + ' ' + (x.feeType || F.defaultType)).toLowerCase().includes(q));
+  const who = c => { const x = F.staff.find(x => x.code === c); return x ? x.name : c; };
+  let h = `<h2 class="sec">Fee types</h2><p class="sub">Each teacher is paid by their fee type. Changing an amount re-prices entries that are still pending; verified pay never changes.</p>
+    <div class="ftypes">${F.feeTypes.map(t => typeCard(t)).join('')}${typeCard({ name: '', rates: {} }, true)}</div>
+
+    <h2 class="sec">Teachers</h2><p class="sub">Choose each teacher's fee type. Blank = ${esc(F.defaultType)}.</p>
+    <div class="tools"><input id="fq" type="search" placeholder="Search name, code or fee type" value="${esc(S.fq || '')}"></div>
+    <div class="panel tlist">${staffList.map(x => `<div class="trow"><div><b>${esc(x.name)}</b> <span class="meta">${esc(x.code)}</span></div>
+      <select data-staff="${esc(x.code)}" aria-label="Fee type for ${esc(x.name)}"><option value="">${esc(F.defaultType)} (default)</option>${F.feeTypes.filter(t => t.name !== F.defaultType || x.feeType === t.name).map(t => `<option ${x.feeType === t.name ? 'selected' : ''}>${esc(t.name)}</option>`).join('')}</select></div>`).join('') || '<div class="empty">No teachers match.</div>'}</div>
+
+    <h2 class="sec">Special event fees</h2><p class="sub">A fee here replaces the fee type for that event. A fee for one teacher beats a fee for everyone.</p>
+    ${F.events.length ? `<form class="panel evform" id="evForm">
+      <div><label for="evE">Event</label><select id="evE">${F.events.map(e => `<option>${esc(e)}</option>`).join('')}</select></div>
+      <div><label for="evS">Teacher</label><select id="evS"><option value="">Everyone</option>${F.staff.map(x => `<option value="${esc(x.code)}">${esc(x.name)}</option>`).join('')}</select></div>
+      <div><label for="evR">Role</label><select id="evR"><option value="">Any role</option>${roles.map(r => `<option>${esc(r)}</option>`).join('')}</select></div>
+      <div><label for="evA">Fee (Rp)</label><input id="evA" inputmode="numeric" required placeholder="300.000"></div>
+      <div><label for="evP">Per</label><select id="evP"><option>Session</option><option>Hour</option></select></div>
+      <button class="btn primary">Save fee</button></form>` : '<div class="panel empty">No events yet. Add one on the Schools tab with Type = Event.</div>'}
+    <div class="panel">${F.eventFees.length ? F.eventFees.map(f => `<div class="trow"><div><b>${esc(f.event)}</b> · ${f.staff ? esc(who(f.staff)) : 'Everyone'} · ${f.role ? esc(f.role) : 'Any role'}</div>
+      <div class="num"><b>${rp(f.amount)}</b> ${perLbl(f.per)} <button class="btn sm ghost" data-delev='${esc(JSON.stringify({ event: f.event, staff: f.staff, role: f.role }))}'>Remove</button></div></div>`).join('') : '<div class="empty">No special event fees yet.</div>'}</div>
+
+    <h2 class="sec">School exceptions</h2><p class="sub">From the Rates sheet: these schools pay a fixed rate whatever the teacher's fee type. Remove one to use fee types there.</p>
+    <div class="panel">${F.schoolRates.length ? F.schoolRates.map(r => `<div class="trow"><div><b>${esc(r.school)}</b> · ${esc(r.role)}</div>
+      <div class="num"><b>${rp(r.amount)}</b> ${perLbl(r.per)} <button class="btn sm ghost" data-delsr='${esc(JSON.stringify({ school: r.school, role: r.role }))}'>Remove</button></div></div>`).join('') : '<div class="empty">None – fee types apply everywhere.</div>'}</div>`;
+  $('#fees').innerHTML = h;
+  $('#fq').oninput = e => { S.fq = e.target.value; clearTimeout(rvT); rvT = setTimeout(() => { renderFees(); const i = $('#fq'); i.focus(); i.setSelectionRange(i.value.length, i.value.length); }, 250); };
+  const ev = $('#evForm');
+  if (ev) ev.onsubmit = e => { e.preventDefault(); feeCall('saveEventFee', { event: $('#evE').value, staff: $('#evS').value, role: $('#evR').value, amount: $('#evA').value.replace(/\D/g, ''), per: $('#evP').value }, 'Event fee saved'); };
+}
+async function feeCall(fn, arg, msg) {
+  $('#fees').classList.add('loading');
+  try {
+    const r = await call(fn, S.token, ...[].concat(arg));
+    toast(msg + (r && r.repriced ? ` · ${r.repriced} pending entr${r.repriced === 1 ? 'y' : 'ies'} re-priced` : ''));
+    S.fees = await call('feeData', S.token); renderFees();
+    S.boot = await call('boot', S.token);
+  } catch (e) { toast(e.message); }
+  $('#fees').classList.remove('loading');
+}
+$('#fees').addEventListener('submit', ev => {
+  const f = ev.target.closest('.ftype'); if (!f) return;
+  ev.preventDefault();
+  const rates = {};
+  f.querySelectorAll('[data-role]').forEach(i => { const v = i.value.replace(/\D/g, ''); rates[i.dataset.role] = v === '' ? null : { amount: v, per: rolePer(i.dataset.role) }; });
+  feeCall('saveFeeType', { oldName: f.dataset.old, name: f.elements.name.value, rates }, f.dataset.old ? 'Fee type saved' : 'Fee type added');
+});
+$('#fees').addEventListener('change', ev => {
+  if (ev.target.dataset.staff !== undefined) feeCall('setStaffFeeType', [ev.target.dataset.staff, ev.target.value], 'Fee type updated');
+});
+$('#fees').addEventListener('input', ev => { // show thousands separators while typing amounts
+  const i = ev.target; if (!i.dataset.role && i.id !== 'evA') return;
+  const d = i.value.replace(/\D/g, ''); i.value = d ? Number(d).toLocaleString('id-ID') : '';
+});
+$('#fees').addEventListener('click', async ev => {
+  const b = ev.target.closest('button'); if (!b) return;
+  if (b.dataset.delft) { if (await confirmBox(`Delete fee type "${b.dataset.delft}"?`, 'Delete')) feeCall('deleteFeeType', b.dataset.delft, 'Fee type deleted'); }
+  if (b.dataset.delev) feeCall('deleteEventFee', JSON.parse(b.dataset.delev), 'Event fee removed');
+  if (b.dataset.delsr) { const x = JSON.parse(b.dataset.delsr); if (await confirmBox(`Remove the fixed rate for ${x.school} (${x.role})? Teachers there will be paid by their fee type.`, 'Remove')) feeCall('deleteSchoolRate', x, 'School exception removed'); }
+});
+
+/* ---------- schedule ---------- */
+const DOW = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const longDate = d => new Date(d + 'T00:00:00').toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' });
+const plural = (n, w) => n + ' ' + w + (n === 1 ? '' : /(s|sh|ch|x)$/.test(w) ? 'es' : 's');
+function teamText(it) {
+  const me = S.boot.me.code;
+  return it.teachers.map(t => `${t.role === 'Lead' ? '<b>' + esc(t.name) + '</b> (lead)' : esc(t.name)}${t.code === me ? ' · you' : ''}${t.sub ? ' · substitute' : ''}${t.off ? ' <span class="warnc">· ' + esc(t.off) + '</span>' : ''}`).join(', ') || '<span class="warnc">No teacher yet</span>';
+}
+function sessMeta(it) {
+  const bits = [];
+  if (it.total) bits.push(`Session ${it.n} of ${it.total}`);
+  if (it.students !== '' && it.students !== null) bits.push(plural(+it.students, 'student'));
+  bits.push(`${esc(it.start)}–${esc(it.end)}`);
+  return bits.join(' · ');
+}
+function itemMatches(it) {
+  const q = (S.sq2 || '').toLowerCase(), f = S.sf || 'all';
+  return (!q || (it.school + ' ' + it.cls + ' ' + it.teachers.map(t => t.name + ' ' + t.code).join(' ') + ' ' + it.project).toLowerCase().includes(q)) &&
+    (f === 'all' || (f === 'need' && !it.teachers.length) || (f === 'last' && it.lastThree) || (f === 'noproj' && !it.project));
+}
+function renderSchedule() {
+  const W = S.sched, head = W.head, items = W.items;
+  let h = '';
+  const myOpen = W.myTasks.filter(t => !t.done);
+  if (myOpen.length) h += `<div class="panel todo mine-todo"><h3>Student reports to prepare</h3>${myOpen.map(t => taskRow(t, true)).join('')}</div>`;
+  const view = head ? (S.view || 'grid') : 'list';
+  if (head) {
+    h += hotDashboard(W);
+    h += `<div class="tools sched-tools">
+      <div class="seg" role="group" aria-label="View"><button type="button" data-view="grid" aria-pressed="${view === 'grid'}">Week grid</button><button type="button" data-view="list" aria-pressed="${view === 'list'}">List</button></div>
+      <input id="sq2" type="search" placeholder="Search school, class, teacher or project" value="${esc(S.sq2 || '')}">
+      <select id="sf" aria-label="Show"><option value="all">All classes</option><option value="need">Needs a teacher</option><option value="last">Last 3 sessions</option><option value="noproj">Project not set</option></select>
+      <button class="btn" id="wsheet">Write week to Google Sheet</button></div>`;
+  }
+  const shown = items.filter(itemMatches);
+  if (!items.length) h += `<div class="panel empty">${head ? 'No classes this week. Set up classes in the Classes tab.' : 'No classes for you this week.'}</div>`;
+  else if (view === 'grid') h += weekGrid(W, shown);
+  else {
+    const days = {};
+    shown.forEach(it => (days[it.date] = days[it.date] || []).push(it));
+    for (let i = 0; i < 7; i++) {
+      const d = addDays(W.monday, i), list = days[d];
+      if (!list) { if (!head && i < 6) h += `<div class="day">${longDate(d)}</div><div class="free">No classes</div>`; continue; }
+      list.sort((a, b) => (a.start + a.school).localeCompare(b.start + b.school));
+      h += `<div class="day">${longDate(d)}${d === W.today ? ' <span class="chip Verified">Today</span>' : ''} <span class="dcount">${plural(list.length, 'class')}</span></div>`;
+      h += head ? '<div class="panel">' + list.map(hotRow).join('') + '</div>' : list.map(teacherCard).join('');
+    }
+  }
+  $('#schedule').innerHTML = h;
+  const sq = $('#sq2');
+  if (sq) {
+    sq.oninput = e => { S.sq2 = e.target.value; clearTimeout(rvT); rvT = setTimeout(() => { renderSchedule(); const i = $('#sq2'); i.focus(); i.setSelectionRange(i.value.length, i.value.length); }, 250); };
+    $('#sf').value = S.sf || 'all'; $('#sf').onchange = e => { S.sf = e.target.value; renderSchedule(); };
+  }
+}
+const teamCodes = it => it.teachers.map(t => (t.fullTime ? '' : 'PT ') + t.code + (t.sub ? '*' : '')).join(' + ');
+const dotTime = t => String(t).replace(':', '.');
+function weekGrid(W, list) {
+  const cols = [];
+  for (let i = 0; i < 7; i++) { const d = addDays(W.monday, i); if (i < 6 || list.some(it => it.date === d)) cols.push(d); }
+  const off = W.noClassThisWeek || [];
+  return `<div class="wgrid" style="--n:${cols.length}">` + cols.map(d => {
+    const day = list.filter(it => it.date === d), dn = DOW[new Date(d + 'T00:00:00').getDay()];
+    const offHere = [...new Set(off.filter(o => o.day === dn).map(o => o.school))];
+    const schools = [...new Set(day.map(it => it.school))].sort((a, b) => a.localeCompare(b));
+    return `<div class="wcol${d === W.today ? ' today' : ''}"><div class="whead"><b>${dn}</b><span>${dLabel(d).replace(/^\w+ /, '')}</span></div>
+      <div class="woff">${offHere.length ? 'No class: ' + offHere.map(esc).join(', ') : 'No class: none'}</div>
+      ${schools.map(sc => {
+        const cl = day.filter(it => it.school === sc).sort((a, b) => a.start.localeCompare(b.start));
+        const same = cl.every(it => it.n === cl[0].n && it.total === cl[0].total) && cl[0].total;
+        return `<div class="wblk"><div class="wsch">${esc(sc.toUpperCase())}${same ? ` <small>(${cl[0].n}/${cl[0].total} Sesi)</small>` : ''}</div>` +
+          cl.map(it => `<button type="button" class="wcls${it.lastThree ? ' last' : ''}${it.teachers.length ? '' : ' need'}" data-cls='${esc(JSON.stringify(it))}'>
+            <span class="c">${esc(it.cls)}${!same && it.total ? ` <small>(${it.n}/${it.total})</small>` : ''}</span>
+            <span class="t">${dotTime(it.start)} - ${dotTime(it.end)}${it.students !== '' ? ` (${it.students} kids)` : ''}</span>
+            ${it.project ? `<span class="p">${esc(it.project)}</span>` : ''}
+            <span class="tt">${esc(teamCodes(it)) || '???'}</span></button>`).join('') + '</div>';
+      }).join('') || '<div class="free">No classes</div>'}</div>`;
+  }).join('') + '</div><p class="sub">* = substitute for that date. Tap a class to assign or change teachers.</p>';
+}
+function openClassInfo(it) {
+  $('#ciTitle').textContent = it.school;
+  const chips = it.teachers.map(t => `<button class="tchip${t.role === 'Lead' ? ' lead' : ''}${t.sub ? ' sub' : ''}${t.fullTime ? ' ft' : ''}" data-chip='${esc(JSON.stringify({ ...t, classId: it.classId, date: it.date, school: it.school, cls: it.cls }))}'>${esc(t.name)} (${esc(t.code)})${t.role === 'Lead' ? ' · lead' : ''}</button>`).join(' ');
+  $('#ciBody').innerHTML = `<p style="margin:0 0 6px"><b>${esc(it.cls)}</b> <span class="cid">${esc(it.classId)}</span></p>
+    <p class="meta" style="margin:0 0 10px">${longDate(it.date)} · ${esc(it.start)}–${esc(it.end)}${it.students !== '' ? ' · ' + plural(+it.students, 'student') : ''}${it.total ? ` · session ${it.n} of ${it.total}` : ''}${it.lastThree ? ' · <span class="chip last">Last 3 sessions</span>' : ''}</p>
+    <div class="proj${it.project ? '' : ' none'}" style="margin-bottom:12px">${it.project ? 'Project: <b>' + esc(it.project) + '</b>' : 'Project not set (Unit Plans tab in the Google Sheet)'}</div>
+    <p style="margin:0 0 6px"><b>Teachers</b> <span class="meta">– tap a name to change</span></p>
+    <div class="team-c" style="justify-content:flex-start;max-width:none">${chips || '<span class="warnc">No teacher yet</span>'}</div>
+    <div style="margin-top:14px"><button class="btn primary" data-assign='${esc(JSON.stringify({ classId: it.classId, date: it.date, school: it.school, cls: it.cls, teachers: it.teachers.map(t => ({ code: t.code, name: t.name })) }))}'>＋ Assign a teacher</button></div>`;
+  $('#clsInfo').showModal();
+}
+$('#ciBody').addEventListener('click', ev => {
+  const b = ev.target.closest('button'); if (!b) return;
+  $('#clsInfo').close();
+  if (b.dataset.assign) openAssign(JSON.parse(b.dataset.assign));
+  if (b.dataset.chip) openChip(JSON.parse(b.dataset.chip));
+});
+function teacherCard(it) {
+  const past = it.date <= S.sched.today;
+  const act = it.cancelled || S.boot.me.fullTime ? '' : it.recorded ? '<span class="chip Verified">Recorded</span>'
+    : past ? `<button class="btn sm primary" data-rec='${esc(JSON.stringify({ date: it.date, school: it.school, start: it.start, end: it.end, hours: it.hours, role: (it.teachers.find(t => t.code === S.boot.me.code) || {}).role || 'Assist' }))}'>Record attendance</button>` : '';
+  return `<div class="panel sess${it.cancelled ? ' gone' : ''}">
+    <div class="when"><b>${esc(it.start)}</b><small>${esc(it.end)}</small></div>
+    <div class="what"><div class="ssch">${esc(it.school)}</div><div class="cls">${esc(it.cls)}</div>
+      ${it.cancelled ? `<div class="offnote">No class – ${esc(it.cancelled)}</div>` : `<div class="meta">${sessMeta(it)}${it.lastThree ? ' <span class="chip last">Last 3 sessions</span>' : ''}</div>
+      <div class="proj${it.project ? '' : ' none'}">${it.project ? 'Project: <b>' + esc(it.project) + '</b>' : 'Project not set yet'}</div>
+      <div class="team">${teamText(it)}</div>${it.notes ? `<div class="meta">${esc(it.notes)}</div>` : ''}`}
+    </div><div class="act">${act}</div></div>`;
+}
+function hotRow(it) {
+  const chips = it.teachers.map(t => `<button class="tchip${t.role === 'Lead' ? ' lead' : ''}${t.sub ? ' sub' : ''}${t.off ? ' off' : ''}${t.fullTime ? ' ft' : ''}" data-chip='${esc(JSON.stringify({ ...t, classId: it.classId, date: it.date, school: it.school, cls: it.cls }))}' title="${esc(t.name)} – ${t.role}${t.sub ? ', substitute' : ''}${t.off ? ', ' + t.off : ''}">${esc(t.code)}</button>`).join('');
+  return `<div class="srow${it.cancelled ? ' gone' : ''}">
+    <div class="when"><b>${esc(it.start)}</b><small>${esc(it.end)}</small></div>
+    <div class="what"><div><b>${esc(it.school)}</b> · ${esc(it.cls)} <span class="cid">${esc(it.classId)}</span></div>
+      ${it.cancelled ? `<div class="offnote">No class – ${esc(it.cancelled)}</div>` : `<div class="meta">${it.total ? `Session ${it.n}/${it.total}` : 'Ongoing'}${it.students !== '' ? ' · ' + plural(+it.students, 'student') : ''}${it.lastThree ? ' · <span class="chip last">Last 3</span>' : ''}</div>
+      <div class="proj${it.project ? '' : ' none'}">${it.project ? esc(it.project) : 'Project not set'}</div>`}</div>
+    <div class="team-c">${it.cancelled ? '' : (chips || '<span class="warnc">No teacher</span>') + ` <button class="btn sm ghost" data-assign='${esc(JSON.stringify({ classId: it.classId, date: it.date, school: it.school, cls: it.cls, teachers: it.teachers.map(t => ({ code: t.code, name: t.name })) }))}'>＋ Assign</button>`}</div></div>`;
+}
+function taskRow(t, mine) {
+  const box = (task, label, enabled) => { const d = task.done; return `<label class="tick${d ? ' done' : ''}"><input type="checkbox" ${d ? 'checked' : ''} ${enabled ? '' : 'disabled'} data-task='${esc(JSON.stringify({ classId: task.classId, task: task.task }))}'> ${label}${d ? ` <small>✓ ${esc(d.by)}</small>` : ''}</label>`; };
+  if (mine) return `<div class="trow2"><div><b>${esc(t.school)}</b> · ${esc(t.cls)}<div class="meta">Last session ${dLabel(t.due)}${t.sessionsLeft ? ' · ' + plural(t.sessionsLeft, 'session') + ' left' : ''}</div></div>${box(t, 'Done', true)}</div>`;
+  return '';
+}
+function hotDashboard(W) {
+  const items = W.items;
+  const groups = {};
+  W.tasks.forEach(t => (groups[t.classId] = groups[t.classId] || { info: t, list: {} }).list[t.task] = t);
+  const open = Object.values(groups).filter(g => Object.values(g.list).some(t => !t.done));
+  const noProj = items.filter(i => !i.project).length;
+  let h = `<div class="sum five">
+    <div class="big"><span>Classes this week</span><b>${items.length}</b><span>${W.classCount} active classes</span></div>
+    <div><span>Need a teacher</span><b class="${W.needsTeacher ? 'warnc' : ''}">${W.needsTeacher}</b></div>
+    <div><span>No class this week</span><b>${W.noClassThisWeek.length}</b><span>from session dates</span></div>
+    <div><span>Reports to do</span><b class="${open.length ? 'warnc' : ''}">${open.length}</b><span>classes ending</span></div>
+    <div><span>Project not set</span><b>${noProj}</b><span>${W.unitPlanCount} unit-plan rows</span></div></div>`;
+  if (W.setupMissing) h += `<div class="banner">${plural(W.setupMissing, 'class')} still need a first session date or a number of sessions. <button class="btn sm" data-goto="classes">Open Classes</button></div>`;
+  const sec = (title, n, body, warn, max) => `<details class="alert${warn && n ? ' warn' : ''}" ${n && warn && n <= (max || 99) ? 'open' : ''}><summary>${title} <span class="cnt">${n}</span></summary><div class="ab">${body}</div></details>`;
+  const ncLines = l => l.map(c => `<li><b>${esc(c.school)}</b> · ${esc(c.cls)} <span class="meta">(${esc(c.day)}${c.next ? ' · next session ' + dLabel(c.next) : ' · no more sessions'})</span></li>`).join('');
+  h += '<div class="alerts">';
+  h += sec('No class this week (school calendar)', W.noClassThisWeek.length, W.noClassThisWeek.length ? `<ul>${ncLines(W.noClassThisWeek)}</ul>` : '<p class="sub">Every running class has a session this week.</p>', true);
+  const nxt = [...new Set(W.noClassNextWeek.map(c => c.school))];
+  h += sec('Next week: schools with no class', nxt.length, nxt.length ? `<p class="sub">No class at: <b>${nxt.map(esc).join(', ')}</b></p><ul>${ncLines(W.noClassNextWeek)}</ul>` : '<p class="sub">No school is off next week.</p>', true);
+  h += sec('End-of-class reports (last 3 sessions)', open.length, Object.values(groups).map(g => {
+    const t = g.info, cr = g.list['Class report'], sr = g.list['Student reports'];
+    const box = (task, label) => `<label class="tick${task.done ? ' done' : ''}"><input type="checkbox" ${task.done ? 'checked' : ''} data-task='${esc(JSON.stringify({ classId: task.classId, task: task.task }))}'> ${label}${task.done ? ` <small>✓ ${esc(task.done.by)}</small>` : ''}</label>`;
+    return `<div class="trow2"><div><b>${esc(t.school)}</b> · ${esc(t.cls)}<div class="meta">${t.hasCal ? 'Last session' : 'Expected last session'} ${dLabel(t.due)} · ${t.sessionsLeft ? plural(t.sessionsLeft, 'session') + ' left of ' + t.total : 'finished'} · Lead: ${t.leads.map(l => esc(l.name)).join(', ') || '<span class="warnc">none</span>'}</div></div>
+      <div class="ticks">${cr ? box(cr, 'Class report') : ''}${sr ? box(sr, 'Student reports') : ''}</div></div>`;
+  }).join('') || '<p class="sub">No class is in its last 3 sessions.</p>', true, 6);
+  h += sec('Repeated projects (same school, last 3 years)', W.repeats.length, `<ul>${W.repeats.map(r => `<li><b>${esc(r.school)}</b> · “${esc(r.project)}” (session ${r.session}) – also done in ${r.years.map(esc).join(', ')}</li>`).join('')}</ul>`, true);
+  h += `</div>`;
+  if (S.boot.sheetUrl) h += `<p class="sub sheetlink">Unit plans (projects per session) are entered in the Google Sheet, tab <b>Unit Plans</b>. <a href="${esc(S.boot.sheetUrl)}" target="_blank" rel="noopener">Open the Google Sheet ↗</a></p>`;
+  return h;
+}
+$('#schedule').addEventListener('click', async ev => {
+  const b = ev.target.closest('button'); if (!b) return;
+  if (b.dataset.rec) { const r = JSON.parse(b.dataset.rec); openEntry({ date: r.date, school: r.school, start: r.start, end: r.end, hours: r.hours, role: r.role }); return; }
+  if (b.dataset.assign) openAssign(JSON.parse(b.dataset.assign));
+  if (b.dataset.chip) openChip(JSON.parse(b.dataset.chip));
+  if (b.dataset.cls) openClassInfo(JSON.parse(b.dataset.cls));
+  if (b.dataset.view) { S.view = b.dataset.view; renderSchedule(); }
+  if (b.dataset.goto) setTab(b.dataset.goto);
+  if (b.id === 'wsheet') {
+    b.disabled = true;
+    try { const r = await call('writeWeekSheet', S.token, S.week); toast(`Saved as tab "${r.sheet}" in the Google Sheet`); } catch (e) { toast(e.message); }
+    b.disabled = false;
+  }
+});
+$('#schedule').addEventListener('change', async ev => {
+  const c = ev.target; if (!c.dataset.task) return;
+  const t = JSON.parse(c.dataset.task); c.disabled = true;
+  try { await call('markTask', S.token, t.classId, t.task, c.checked); toast(c.checked ? t.task + ' marked done' : 'Marked as not done'); refresh(); }
+  catch (e) { toast(e.message); c.checked = !c.checked; c.disabled = false; }
+});
+let asgCtx = null;
+function openAssign(x, scope) {
+  asgCtx = x;
+  $('#asgWhat').textContent = `${x.school} · ${x.cls}` + (x.date ? ` · ${longDate(x.date)}` : '');
+  if (x.date) $('#aDateLbl').textContent = 'Only on ' + dLabel(x.date) + ' (substitute)';
+  const st = S.boot.staff.filter(s => s.active).sort((a, b) => (b.fullTime - a.fullTime) || a.name.localeCompare(b.name));
+  $('#aStaff').innerHTML = '<option value="">Choose…</option>' + st.map(s => `<option value="${esc(s.code)}">${esc(s.name)} (${esc(s.code)})${s.fullTime ? ' – full-timer' : ''}</option>`).join('');
+  $('#aRepl').innerHTML = '<option value="">Nobody (extra teacher)</option>' + x.teachers.map(t => `<option value="${esc(t.code)}">${esc(t.name)} (${esc(t.code)})</option>`).join('');
+  const sc = scope || 'date';
+  $('#asgForm').querySelector(`[value=${sc}]`).checked = true; $('#aReplF').hidden = sc !== 'date'; $('#aRole').value = 'Assist'; $('#asgErr').textContent = '';
+  $('#asgForm').querySelector('[value=date]').closest('label').hidden = !x.date;
+  $('#asgDlg').showModal();
+}
+$('#asgForm').addEventListener('change', e => { if (e.target.name === 'aScope') $('#aReplF').hidden = e.target.value !== 'date'; });
+$('#asgForm').addEventListener('submit', async ev => {
+  ev.preventDefault();
+  const scope = $('#asgForm').querySelector('[name=aScope]:checked').value;
+  try {
+    await call('assignTeacher', S.token, { classId: asgCtx.classId, code: $('#aStaff').value, role: $('#aRole').value, scope, date: asgCtx.date, replaces: scope === 'date' ? $('#aRepl').value : '' });
+    $('#asgDlg').close(); toast(scope === 'date' ? 'Substitute saved for ' + dLabel(asgCtx.date) : 'Teacher added to every session'); refresh();
+  } catch (e) { $('#asgErr').textContent = e.message; }
+});
+let chipCtx = null;
+function openChip(t) {
+  chipCtx = t;
+  $('#chName').textContent = `${t.name} (${t.code})`;
+  $('#chInfo').innerHTML = `${esc(t.role)}${t.fullTime ? ' · full-timer' : ''} · ${esc(t.school)} · ${esc(t.cls)}<br>${t.sub ? 'Substitute on ' + dLabel(t.date) + (t.replaces ? ' (replacing ' + esc(t.replaces) + ')' : '') : 'Teaches this class every session'}${t.off ? `<br><span class="warnc">On ${esc(t.off.toLowerCase())} this day</span>` : ''}`;
+  const once = t.from && t.from === t.to;
+  $('#chBtns').innerHTML = once
+    ? `<button class="btn" data-ch="unsub">Remove this substitute</button>`
+    : `<button class="btn" data-ch="away">Not teaching on ${dLabel(t.date)}</button><button class="btn ghost" data-ch="remove">Remove from this class (all sessions)</button>`;
+  $('#chErr').textContent = '';
+  $('#chipDlg').showModal();
+}
+$('#chBtns').addEventListener('click', async ev => {
+  const b = ev.target.closest('[data-ch]'); if (!b) return; const t = chipCtx;
+  try {
+    if (b.dataset.ch === 'unsub') await call('unassignTeacher', S.token, { classId: t.classId, code: t.code, from: t.from, to: t.to, replaces: t.replaces || '' });
+    if (b.dataset.ch === 'away') await call('assignTeacher', S.token, { classId: t.classId, code: '', scope: 'date', date: t.date, replaces: t.code });
+    if (b.dataset.ch === 'remove') { $('#chipDlg').close(); if (!await confirmBox(`Remove ${t.name} from ${t.school} – ${t.cls} for the whole semester?`, 'Remove')) return; await call('unassignTeacher', S.token, { classId: t.classId, code: t.code, from: t.from || '', to: t.to || '', replaces: '' }); }
+    $('#chipDlg').close(); toast('Saved'); refresh();
+  } catch (e) { $('#chErr').textContent = e.message; toast(e.message); }
+});
+
+/* ---------- classes & sessions (head teacher) ---------- */
+function renderClasses() {
+  if (!S.plan) S.plan = loadPlan();
+  if (S.plan) return renderPlanner();
+  const D = S.classesData, q = (S.cq || '').toLowerCase(), f = S.cfl || 'active';
+  if (!S.csem) S.csem = D.current;
+  const sem = S.csem;
+  $('#pLabel').textContent = 'Classes & sessions'; $('#pRange').textContent = sem === 'all' ? 'All semesters' : sem;
+  const keep = c => (sem === 'all' || c.semester === sem) && (f === 'inactive' ? !c.active : c.active) && (f !== 'ending' || c.ending) && (f !== 'setup' || !c.total || !c.first) &&
+    (!q || (c.school + ' ' + c.name + ' ' + c.id + ' ' + c.teachers.map(t => t.name + ' ' + t.code).join(' ')).toLowerCase().includes(q));
+  const names = [...new Set(D.schools.map(x => x.name).concat(D.classes.map(c => c.school)))].sort((a, b) => a.localeCompare(b));
+  const row = c => `<div class="crow${c.active ? '' : ' gone'}"><div>
+      <div><b>${esc(c.name)}</b> <span class="cid">${esc(c.id)}</span>${c.ending ? ' <span class="chip last">Last 3 sessions</span>' : ''}${!c.active ? ' <span class="chip Deleted">Inactive</span>' : ''}</div>
+      <div class="meta">${esc(c.day || 'No date yet')} ${esc(c.start)}–${esc(c.end)}${c.students !== '' ? ' · ' + plural(+c.students, 'student') : ''}${c.period ? ' · ' + esc(c.period) : ''}</div>
+      <div class="meta">${c.hasCal ? `<b>Academic calendar</b> · ${plural(c.total, 'session date')}` : (c.total ? `No calendar · <b>${c.total} expected</b> (${esc(c.freq.toLowerCase())})` : '<span class="warnc">Number of sessions not set</span>')}
+        ${c.total ? ` · done ${c.done}/${c.total}` : ''}${c.next ? ' · next ' + dLabel(c.next) : c.total ? ' · finished' : ''}${c.last ? ' · last ' + dLabel(c.last) : ''}</div>
+      <div class="meta">Teachers: ${c.teachers.map(t => esc(t.name) + (t.role === 'Lead' ? ' (lead)' : '')).join(', ') || '<span class="warnc">none</span>'}</div></div>
+    <div class="cbtns"><button class="btn sm" data-edit-cls="${esc(c.id)}">Edit</button><button class="btn sm ghost" data-asg-cls="${esc(c.id)}">＋ Teacher</button></div></div>`;
+  const semOpts = [...new Set(D.semesters.concat([sem === 'all' ? D.current : sem]))].sort().reverse();
+  let h = `<div class="tools"><select id="csem" aria-label="Semester">${semOpts.map(x => `<option ${x === sem ? 'selected' : ''}>${esc(x)}</option>`).join('')}<option value="all" ${sem === 'all' ? 'selected' : ''}>All semesters</option></select>
+    <input id="cq" type="search" placeholder="Search school, class or teacher" value="${esc(S.cq || '')}">
+    <select id="cfl" aria-label="Show"><option value="active">Active classes</option><option value="ending">Ending soon (last 3)</option><option value="setup">Missing sessions or dates</option><option value="inactive">Inactive classes</option></select>
+    <button class="btn" data-add-cls="">＋ Add class</button>
+    <button class="btn primary" data-plan="1">Plan next semester</button></div>`;
+  let empty = [];
+  names.forEach(n => {
+    const cl = D.classes.filter(c => c.school === n && keep(c)).sort((a, b) => (a.day + a.start).localeCompare(b.day + b.start));
+    if (!cl.length) { if (f === 'active' && !q && D.schools.some(x => x.name === n) && !D.classes.some(c => c.school === n && c.active && (sem === 'all' || c.semester === sem))) empty.push(n); return; }
+    const end = cl.filter(c => c.ending).length, miss = cl.filter(c => !c.total || !c.first).length;
+    h += `<details class="alert school" ${q || f !== 'active' ? 'open' : ''}><summary>${esc(n)} <span class="meta">${plural(cl.length, 'class')}</span>${end ? ` <span class="chip last">${end} ending</span>` : ''}${miss ? ` <span class="chip Rejected">${miss} to set up</span>` : ''}<span class="cnt">${cl.length}</span></summary>
+      <div class="ab">${cl.map(row).join('')}<button class="btn sm ghost" data-add-cls="${esc(n)}">＋ Add class at ${esc(n)}</button></div></details>`;
+  });
+  if (empty.length) h += `<details class="alert school"><summary>Active schools without classes <span class="cnt">${empty.length}</span></summary><div class="ab">${empty.map(n => `<div class="crow"><div><b>${esc(n)}</b></div><button class="btn sm ghost" data-add-cls="${esc(n)}">＋ Add class</button></div>`).join('')}</div></details>`;
+  $('#classes').innerHTML = h;
+  $('#cq').oninput = e => { S.cq = e.target.value; clearTimeout(rvT); rvT = setTimeout(() => { renderClasses(); const i = $('#cq'); i.focus(); i.setSelectionRange(i.value.length, i.value.length); }, 250); };
+  $('#cfl').value = f; $('#cfl').onchange = e => { S.cfl = e.target.value; renderClasses(); };
+  $('#csem').onchange = e => { S.csem = e.target.value; renderClasses(); };
+}
+$('#classes').addEventListener('click', ev => {
+  const b = ev.target.closest('button'); if (!b) return;
+  const D = S.classesData;
+  if (b.dataset.editCls) openClassEditor(D.classes.find(c => c.id === b.dataset.editCls));
+  if (b.dataset.addCls !== undefined) openClassEditor(null, b.dataset.addCls);
+  if (b.dataset.asgCls) { const c = D.classes.find(x => x.id === b.dataset.asgCls); openAssign({ classId: c.id, date: '', school: c.school, cls: c.name, teachers: c.teachers }, 'semester'); }
+  if (b.dataset.plan) startPlan();
+});
+
+/* ---------- new semester planner ---------- */
+const PLAN_KEY = 'efk_semester_plan';
+const DAYS6 = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+function loadPlan() { try { const p = JSON.parse(store.get(PLAN_KEY) || 'null'); return p && p.rows ? p : null; } catch (e) { return null; } }
+function savePlan() { if (S.plan) store.set(PLAN_KEY, JSON.stringify(S.plan)); }
+function firstMondayOnOrAfter(d) { let x = d; while (new Date(x + 'T00:00:00').getDay() !== 1) x = addDays(x, 1); return x; }
+function startPlan() {
+  const D = S.classesData, from = S.csem && S.csem !== 'all' ? S.csem : D.current;
+  const m = from.match(/^(\d{4})-(\d{4}) Sem ([12])$/);
+  const to = m ? (m[3] === '1' ? `${m[1]}-${m[2]} Sem 2` : `${m[2]}-${+m[2] + 1} Sem 1`) : D.next;
+  const start = m ? firstMondayOnOrAfter(m[3] === '1' ? `${m[2]}-01-01` : `${m[2]}-07-01`) : addDays(D.today, 30);
+  let k = 0;
+  const rows = D.classes.filter(c => c.active && c.semester === from).sort((a, b) => (a.school + a.day + a.start).localeCompare(b.school + b.day + b.start)).map(c => ({
+    k: ++k, fromId: c.id, school: c.school, name: c.name, day: DAYS6.includes(c.day) ? c.day : 'Monday', start: c.start, end: c.end,
+    students: c.students === '' ? '' : c.students, expected: c.total || '', hasCal: c.hasCal, freq: c.hasCal ? 'Weekly' : (c.freq || 'Weekly'),
+    period: c.period, notes: c.notes, keep: true, teachers: c.teachers.map(t => t.code + (t.role === 'Lead' ? ' (lead)' : '')).join(', '),
+    orig: { name: c.name, day: c.day, start: c.start, end: c.end, students: c.students, expected: c.total || '' } }));
+  S.plan = { from, to, start, copyTeachers: true, rows, next: k + 1, open: {} };
+  savePlan(); renderPlanner();
+}
+const changed = r => r.fromId && r.keep && ['name','day','start','end','students','expected'].some(f => String(r[f] ?? '') !== String(r.orig[f] ?? ''));
+function planCounts() {
+  const R = S.plan.rows;
+  return { keep: R.filter(r => r.keep && r.fromId).length, stop: R.filter(r => !r.keep).length, add: R.filter(r => r.keep && !r.fromId).length, chg: R.filter(changed).length,
+    missing: R.filter(r => r.keep && !(+r.expected > 0)).length };
+}
+function planSummary() {
+  const c = planCounts();
+  return `<div class="sum five plansum"><div class="big"><span>Classes in the new semester</span><b>${c.keep + c.add}</b></div>
+    <div><span>Continuing</span><b>${c.keep}</b><span>${c.chg} changed</span></div><div><span>Stopped</span><b>${c.stop}</b></div>
+    <div><span>New</span><b>${c.add}</b></div><div><span>Sessions not set</span><b class="${c.missing ? 'warnc' : ''}">${c.missing}</b><span>open-ended if left empty</span></div></div>`;
+}
+function planRow(r) {
+  const opts = (list, v) => list.map(x => `<option ${x === v ? 'selected' : ''}>${esc(x)}</option>`).join('');
+  const times = v => (v && !TIMES.includes(v) ? TIMES.concat(v).sort() : TIMES).map(t => `<option ${t === v ? 'selected' : ''}>${t}</option>`).join('');
+  const tag = !r.fromId ? '<span class="chip Verified">New</span>' : !r.keep ? '<span class="chip Deleted">Stopped</span>' : changed(r) ? '<span class="chip last">Changed</span>' : '';
+  return `<div class="prow${r.keep ? '' : ' off'}" data-k="${r.k}">
+    <label class="pkeep" title="Keep this class"><input type="checkbox" data-f="keep" ${r.keep ? 'checked' : ''}><span class="sr">Keep</span></label>
+    <div class="pmain"><input data-f="name" value="${esc(r.name)}" aria-label="Class" ${r.keep ? '' : 'disabled'}>
+      <div class="meta">${tag} ${r.teachers ? 'Teachers: ' + esc(r.teachers) : '<span class="warnc">No teachers yet</span>'}${r.hasCal ? ' · <b>check dates with the school calendar</b>' : ''}${!r.fromId ? ` <button type="button" class="btn sm ghost" data-del-row="${r.k}">Remove</button>` : ''}</div></div>
+    <div class="pf"><label>Day</label><select data-f="day" ${r.keep ? '' : 'disabled'}>${opts(DAYS6, r.day)}</select></div>
+    <div class="pf"><label>Start</label><select data-f="start" ${r.keep ? '' : 'disabled'}>${times(r.start)}</select></div>
+    <div class="pf"><label>End</label><select data-f="end" ${r.keep ? '' : 'disabled'}>${times(r.end)}</select></div>
+    <div class="pf sm"><label>Kids</label><input data-f="students" type="number" min="0" inputmode="numeric" value="${esc(r.students)}" ${r.keep ? '' : 'disabled'}></div>
+    <div class="pf sm"><label>Sessions</label><input data-f="expected" type="number" min="0" inputmode="numeric" value="${esc(r.expected)}" ${r.keep ? '' : 'disabled'}></div></div>`;
+}
+function renderPlanner() {
+  const P = S.plan, D = S.classesData, q = (S.pq || '').toLowerCase(), f = S.pf || 'all';
+  $('#pLabel').textContent = 'New semester'; $('#pRange').textContent = P.to;
+  const show = r => (!q || (r.school + ' ' + r.name + ' ' + r.teachers).toLowerCase().includes(q)) &&
+    (f === 'all' || (f === 'chg' && changed(r)) || (f === 'stop' && !r.keep) || (f === 'new' && !r.fromId) || (f === 'nos' && r.keep && !(+r.expected > 0)));
+  const schools = [...new Set(P.rows.map(r => r.school))].sort((a, b) => a.localeCompare(b));
+  let h = `<div class="panel planhead"><h2>Plan ${esc(P.to)}</h2>
+      <p class="sub">All classes of <b>${esc(P.from)}</b> are copied with the same day, time, students, number of sessions and teachers. Untick the classes that stop, change what is different, and add new classes or schools. Your plan is kept on this device until you press <b>Create</b>.</p>
+      <div class="planf"><div><label for="plTo">New semester name</label><input id="plTo" value="${esc(P.to)}"></div>
+        <div><label for="plStart">First day of the semester</label><input id="plStart" type="date" value="${esc(P.start)}"></div>
+        <label class="calbox"><input type="checkbox" id="plCopy" ${P.copyTeachers ? 'checked' : ''}> Copy the teachers of each class</label></div></div>
+    <div id="plSum">${planSummary()}</div>
+    <div class="tools"><input id="pq" type="search" placeholder="Search school, class or teacher" value="${esc(S.pq || '')}">
+      <select id="pfl" aria-label="Show"><option value="all">All classes</option><option value="chg">Changed</option><option value="stop">Stopped</option><option value="new">New</option><option value="nos">Sessions not set</option></select>
+      <select id="plNewSchool" aria-label="School for a new class"><option value="">＋ New class at…</option>${D.schools.map(x => `<option>${esc(x.name)}</option>`).join('')}</select></div>`;
+  schools.forEach(sc => {
+    const rows = P.rows.filter(r => r.school === sc), vis = rows.filter(show);
+    if (!vis.length) return;
+    const kept = rows.filter(r => r.keep).length, open = P.open[sc] || q || f !== 'all';
+    h += `<details class="alert school plan" data-school="${esc(sc)}" ${open ? 'open' : ''}><summary>${esc(sc)} <span class="meta">${kept}/${rows.length} continuing</span>${rows.some(r => !r.fromId) ? ' <span class="chip Verified">new</span>' : ''}${rows.some(changed) ? ' <span class="chip last">changed</span>' : ''}<span class="cnt">${kept}</span></summary>
+      <div class="ab">${open ? vis.map(planRow).join('') : ''}<div class="pbtns"><button type="button" class="btn sm ghost" data-add-row="${esc(sc)}">＋ Add class at ${esc(sc)}</button>
+        <button type="button" class="btn sm ghost" data-stop-school="${esc(sc)}">${kept ? 'Stop the whole school' : 'Keep the whole school'}</button></div></div></details>`;
+  });
+  h += `<div class="planfoot"><button type="button" class="btn ghost" id="plDiscard">Discard plan</button><button type="button" class="btn primary" id="plCreate">Create ${esc(P.to)}</button></div>`;
+  $('#classes').innerHTML = h;
+  $('#pfl').value = f;
+}
+function planRefreshSum() { const el = $('#plSum'); if (el) el.innerHTML = planSummary(); }
+function planAdd(school) {
+  const P = S.plan, r = { k: P.next++, fromId: '', school, name: '', day: 'Monday', start: '', end: '', students: '', expected: '', hasCal: false, freq: 'Weekly', period: '', notes: '', keep: true, teachers: '', orig: {} };
+  P.rows.push(r); P.open[school] = true; S.pf = 'all'; savePlan(); renderPlanner();
+  const el = document.querySelector(`.prow[data-k="${r.k}"] [data-f=name]`); if (el) { el.scrollIntoView({ block: 'center' }); el.focus(); }
+}
+$('#classes').addEventListener('toggle', e => {
+  const d = e.target; if (!S.plan || !d.matches || !d.matches('details.plan')) return;
+  S.plan.open[d.dataset.school] = d.open; savePlan();
+  if (d.open && !d.querySelector('.prow')) renderPlanner();
+}, true);
+$('#classes').addEventListener('input', e => {
+  if (!S.plan) return;
+  const t = e.target;
+  if (t.id === 'pq') { S.pq = t.value; clearTimeout(rvT); rvT = setTimeout(() => { renderPlanner(); const i = $('#pq'); i.focus(); i.setSelectionRange(i.value.length, i.value.length); }, 300); return; }
+  const row = t.closest('.prow'); if (!row || !t.dataset.f || t.dataset.f === 'keep') return;
+  const r = S.plan.rows.find(x => x.k === +row.dataset.k); r[t.dataset.f] = t.value; savePlan(); planRefreshSum();
+});
+$('#classes').addEventListener('change', e => {
+  if (!S.plan) return;
+  const t = e.target, P = S.plan;
+  if (t.id === 'plTo') { P.to = t.value.trim(); savePlan(); $('#pRange').textContent = P.to; return; }
+  if (t.id === 'plStart') { P.start = t.value; savePlan(); return; }
+  if (t.id === 'plCopy') { P.copyTeachers = t.checked; savePlan(); return; }
+  if (t.id === 'pfl') { S.pf = t.value; renderPlanner(); return; }
+  if (t.id === 'plNewSchool') { if (t.value) planAdd(t.value); return; }
+  const row = t.closest('.prow'); if (!row || !t.dataset.f) return;
+  const r = P.rows.find(x => x.k === +row.dataset.k);
+  if (t.dataset.f === 'keep') { r.keep = t.checked; savePlan(); renderPlanner(); return; }
+  r[t.dataset.f] = t.value; savePlan(); planRefreshSum();
+});
+$('#classes').addEventListener('click', async e => {
+  if (!S.plan) return;
+  const b = e.target.closest('button'); if (!b) return; const P = S.plan;
+  if (b.dataset.addRow) planAdd(b.dataset.addRow);
+  if (b.dataset.delRow) { P.rows = P.rows.filter(r => r.k !== +b.dataset.delRow); savePlan(); renderPlanner(); }
+  if (b.dataset.stopSchool) { const rows = P.rows.filter(r => r.school === b.dataset.stopSchool), any = rows.some(r => r.keep); rows.forEach(r => { if (r.fromId) r.keep = !any; }); if (any) P.rows = P.rows.filter(r => r.school !== b.dataset.stopSchool || r.fromId); savePlan(); renderPlanner(); }
+  if (b.id === 'plDiscard') { if (!await confirmBox('Discard this plan? Nothing has been saved to the Google Sheet yet.', 'Discard')) return; S.plan = null; store.set(PLAN_KEY, null); renderClasses(); }
+  if (b.id === 'plCreate') {
+    const c = planCounts(), rows = P.rows.filter(r => r.keep);
+    const bad = rows.find(r => !r.name.trim() || !r.start || !r.end || r.end <= r.start);
+    if (bad) { P.open[bad.school] = true; renderPlanner(); toast(`Check ${bad.school}: ${bad.name || 'new class'} needs a name and a start/end time.`); return; }
+    if (!P.start) { toast('Choose the first day of the semester.'); return; }
+    if (!await confirmBox(`Create ${P.to} with ${c.keep + c.add} classes from ${dLabel(P.start)}? ${P.from} will end on ${dLabel(addDays(P.start, -1))}.`, 'Create')) return;
+    b.disabled = true;
+    try {
+      const r = await call('rolloverSemester', S.token, { from: P.from, to: P.to, start: P.start, copyTeachers: P.copyTeachers,
+        rows: rows.map(x => ({ fromId: x.fromId, school: x.school, name: x.name, day: x.day, start: x.start, end: x.end, students: x.students, expected: x.expected, hasCal: x.hasCal, freq: x.freq, period: x.period, notes: x.notes })) });
+      S.plan = null; store.set(PLAN_KEY, null); S.csem = r.semester; toast(`${r.semester} created: ${r.created} classes, ${r.teachers} teacher places copied.`); refresh();
+    } catch (err) { toast(err.message); b.disabled = false; }
+  }
+});
+let ceDates = [], ceId = null;
+function ceRender() {
+  ceDates = [...new Set(ceDates)].sort();
+  $('#ceChips').innerHTML = ceDates.map(d => `<button type="button" class="dchip" data-d="${d}" title="Remove">${dLabel(d)} <span aria-hidden="true">×</span></button>`).join('') || '<span class="meta">No dates yet</span>';
+  $('#ceCount').textContent = plural(ceDates.length, 'session');
+}
+function ceToggle() { const on = $('#ceCal').checked; $('#ceDatesF').hidden = !on; $('#ceExpF').hidden = on; ceHint(); }
+function ceHint() {
+  const f = $('#ceFirst').value, n = +$('#ceExp').value, step = /2/.test($('#ceFreq').value) ? 14 : /Month/.test($('#ceFreq').value) ? 28 : 7;
+  $('#ceExpHint').textContent = f && n > 0 ? `Last session around ${dLabel(addDays(f, step * (n - 1)))}. You will be reminded when the last 3 sessions start.` : 'You will be reminded when the last 3 sessions start.';
+}
+function openClassEditor(c, school) {
+  const D = S.classesData;
+  ceId = c ? c.id : null;
+  $('#ceTitle').textContent = c ? 'Edit class' : 'Add class';
+  $('#ceSchool').innerHTML = D.schools.map(x => `<option>${esc(x.name)}</option>`).join('');
+  $('#ceSchool').value = c ? c.school : (school || D.schools[0].name);
+  $('#ceName').value = c ? c.name : '';
+  timeSel($('#ceStart'), c ? c.start : ''); timeSel($('#ceEnd'), c ? c.end : '');
+  $('#ceStudents').value = c && c.students !== '' ? c.students : '';
+  $('#cePeriod').value = c ? c.period : '';
+  $('#ceCal').checked = c ? c.hasCal : false;
+  ceDates = c && c.hasCal ? c.dates.slice() : [];
+  $('#ceFirst').value = c && !c.hasCal ? c.first : '';
+  $('#ceFreq').value = c && !c.hasCal ? c.freq : 'Weekly';
+  $('#ceExp').value = c && !c.hasCal && c.expected ? c.expected : '';
+  $('#ceWFrom').value = c ? c.first : ''; $('#ceDate').value = '';
+  $('#ceSem').value = c ? c.semester : (S.csem && S.csem !== 'all' ? S.csem : D.current);
+  $('#ceAy').value = c ? c.ay : D.ay; $('#ceNotes').value = c ? c.notes : ''; $('#ceActive').checked = c ? c.active : true;
+  ceCopyList(); ceRender(); ceToggle(); $('#ceErr').textContent = '';
+  $('#clsDlg').showModal();
+}
+function ceCopyList() {
+  const src = S.classesData.classes.filter(x => x.hasCal && x.dates.length && x.id !== ceId && x.school === $('#ceSchool').value);
+  $('#ceCopy').innerHTML = src.map(x => `<option value="${esc(x.id)}">${esc(x.name)} (${esc(x.day)}, ${x.dates.length})</option>`).join('');
+  $('#ceCopyRow').hidden = !src.length;
+}
+$('#ceSchool').addEventListener('change', ceCopyList);
+$('#ceCal').addEventListener('change', ceToggle);
+['#ceFirst', '#ceFreq', '#ceExp'].forEach(x => $(x).addEventListener('input', ceHint));
+$('#ceAdd').onclick = () => { const d = $('#ceDate').value; if (d) { ceDates.push(d); ceRender(); } };
+$('#ceWAdd').onclick = () => { const f = $('#ceWFrom').value, n = Math.min(40, +$('#ceWN').value || 0); if (!f || !n) return; for (let i = 0; i < n; i++) ceDates.push(addDays(f, 7 * i)); ceRender(); };
+$('#ceCopyBtn').onclick = () => { const src = S.classesData.classes.find(x => x.id === $('#ceCopy').value); if (src) { ceDates = ceDates.concat(src.dates); ceRender(); } };
+$('#ceChips').addEventListener('click', e => { const b = e.target.closest('[data-d]'); if (b) { ceDates = ceDates.filter(d => d !== b.dataset.d); ceRender(); } });
+$('#clsForm').addEventListener('submit', async ev => {
+  ev.preventDefault();
+  const data = { id: ceId, school: $('#ceSchool').value, name: $('#ceName').value, start: $('#ceStart').value, end: $('#ceEnd').value, students: $('#ceStudents').value,
+    period: $('#cePeriod').value, hasCal: $('#ceCal').checked, dates: ceDates, first: $('#ceFirst').value, freq: $('#ceFreq').value, expected: $('#ceExp').value,
+    ay: $('#ceAy').value, semester: $('#ceSem').value, notes: $('#ceNotes').value, active: $('#ceActive').checked };
+  $('#ceSave').disabled = true;
+  try { await call('saveClass', S.token, data); $('#clsDlg').close(); toast(ceId ? 'Class updated' : 'Class added'); refresh(); }
+  catch (e) { $('#ceErr').textContent = e.message; }
+  $('#ceSave').disabled = false;
+});
+
+/* ---------- compare schedule vs recorded attendance ---------- */
+function renderCompare() {
+  const d = S.cmp; periodHeader(d.range);
+  const f = S.cf || 'pt-diff';
+  const rows = d.rows.filter(r => f === 'ft' ? r.fullTime : !r.fullTime && (f === 'pt' || r.missing.length || r.extra.length || r.hourDiffs.length));
+  const pt = d.rows.filter(r => !r.fullTime), tot = k => pt.reduce((a, r) => a + (Array.isArray(r[k]) ? r[k].length : r[k]), 0);
+  const line = x => `${dLabel(x.date)} · ${esc(x.start)}–${esc(x.end)} · ${esc(x.school)}${x.cls ? ' – ' + esc(x.cls) : ''}`;
+  let h = `<div class="sum five">
+    <div><span>Part-timer classes scheduled</span><b>${tot('scheduled')}</b></div>
+    <div><span>Recorded by part-timers</span><b>${tot('recorded')}</b></div>
+    <div class="big"><span>Matching</span><b>${tot('matched')}</b></div>
+    <div><span>Scheduled, not recorded</span><b class="${tot('missing') ? 'warnc' : ''}">${tot('missing')}</b></div>
+    <div><span>Recorded, not scheduled</span><b class="${tot('extra') ? 'warnc' : ''}">${tot('extra')}</b></div></div>
+    <div class="tools"><select id="cf" aria-label="Show"><option value="pt-diff">Part-timers with differences</option><option value="pt">All part-timers</option><option value="ft">Full-timers (schedule only)</option></select></div>`;
+  h += rows.length ? `<div class="panel">${rows.map(r => `<details class="cmp"><summary>
+      <span class="nm"><b>${esc(r.name)}</b> <span class="meta">${esc(r.code)}${r.fullTime ? ' · full-timer' : ''}</span></span>
+      <span><small>Scheduled</small>${r.scheduled} <small>(${r.schedHours} h)</small></span>
+      ${r.fullTime ? '' : `<span><small>Recorded</small>${r.recorded} <small>(${r.recHours} h)</small></span>
+      <span class="${r.missing.length ? 'warnc' : ''}"><small>Missing</small>${r.missing.length}</span>
+      <span class="${r.extra.length ? 'warnc' : ''}"><small>Not scheduled</small>${r.extra.length}</span>`}</summary>
+      <div class="ab">${r.missing.length ? `<p><b>Scheduled but not recorded</b></p><ul>${r.missing.map(x => `<li>${line(x)}</li>`).join('')}</ul>` : ''}
+      ${r.extra.length ? `<p><b>Recorded but not in the schedule</b></p><ul>${r.extra.map(x => `<li>${line(x)} · ${esc(x.status)}</li>`).join('')}</ul>` : ''}
+      ${r.hourDiffs.length ? `<p><b>Different hours</b></p><ul>${r.hourDiffs.map(x => `<li>${dLabel(x.date)} · ${esc(x.school)} – schedule ${x.sched} h, recorded ${x.rec} h</li>`).join('')}</ul>` : ''}
+      ${!r.missing.length && !r.extra.length && !r.hourDiffs.length ? '<p class="sub">Everything matches.</p>' : ''}</div></details>`).join('')}</div>`
+    : `<div class="panel empty">${f === 'pt-diff' ? 'No differences – everything recorded matches the schedule.' : 'Nobody to show.'}</div>`;
+  $('#compare').innerHTML = h;
+  $('#cf').value = f; $('#cf').onchange = e => { S.cf = e.target.value; renderCompare(); };
+}
+
+/* ---------- boot ---------- */
+/* ---------- automatic sign-out after 30 minutes without activity ---------- */
+const IDLE_MS = 30 * 60 * 1000, PING_MS = 10 * 60 * 1000;
+let lastActive = Date.now(), lastStored = 0;
+function touch(force) {
+  lastActive = Date.now();
+  if (force || lastActive - lastStored > 15000) { store.set('pt_active', String(lastActive)); lastStored = lastActive; }
+  // busy on screen but not saving anything: keep the server session alive too
+  if (S.token && S.boot && Date.now() - lastServer > PING_MS) call('ping', S.token).catch(() => {});
+}
+function idleCheck() {
+  if (!S.token) return;
+  const seen = Math.max(lastActive, +store.get('pt_active') || 0); // another tab may have been active
+  if (Date.now() - seen > IDLE_MS) signOut(false, 'You were signed out after 30 minutes without activity. Please sign in again.');
+}
+['pointerdown', 'keydown', 'input', 'touchstart'].forEach(ev => document.addEventListener(ev, () => touch(), { passive: true, capture: true }));
+document.addEventListener('scroll', () => touch(), { passive: true, capture: true });
+document.addEventListener('visibilitychange', () => { if (!document.hidden) idleCheck(); });
+window.addEventListener('focus', idleCheck);
+window.addEventListener('pageshow', idleCheck);
+setInterval(idleCheck, 30000);
+
+if (S.token) {
+  const seen = +store.get('pt_active') || 0;
+  if (Date.now() - seen > IDLE_MS) signOut(true, 'You were signed out after 30 minutes without activity. Please sign in again.');
+  else { touch(true); call('boot', S.token).then(start).catch(() => signOut(true)); }
+}
+else loadNames();
+}
+</script>
+</body>
+</html>
